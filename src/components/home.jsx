@@ -7,211 +7,84 @@ const TEXT = "#F7F3E9";
 const MUTED = "#B9C2D7";
 
 // CAST DATA
-// Format: Actor Name | Character Name
 const makeCast = (entries) =>
   entries.split(";").filter(Boolean).map((entry) => {
     const [name, character] = entry.split("|");
-    return {
-      name: name.trim(),
-      character: character.trim(),
-      image: "",
-    };
+    return { name: name.trim(), character: character.trim(), image: "" };
   });
 
 const CAST_DATA = {
   // BOLLYWOOD
-  "Jawan": makeCast(
-    "Shah Rukh Khan|Azad Rathore / Vikram Rathore;Nayanthara|Narmada;Vijay Sethupathi|Kalee;Deepika Padukone|Aishwarya"
-  ),
-  "Pathaan": makeCast(
-    "Shah Rukh Khan|Pathaan;Deepika Padukone|Rubina;John Abraham|Jim;Dimple Kapadia|Nandini"
-  ),
-  "Animal": makeCast(
-    "Ranbir Kapoor|Ranvijay Singh;Rashmika Mandanna|Geetanjali;Anil Kapoor|Balbir Singh;Bobby Deol|Abrar Haque"
-  ),
-  "Dangal": makeCast(
-    "Aamir Khan|Mahavir Singh Phogat;Sakshi Tanwar|Daya Kaur;Fatima Sana Shaikh|Geeta Phogat;Sanya Malhotra|Babita Kumari"
-  ),
-  "3 Idiots": makeCast(
-    "Aamir Khan|Rancho;R. Madhavan|Farhan;Sharman Joshi|Raju;Kareena Kapoor|Pia"
-  ),
-  "KGF Chapter 2": makeCast(
-    "Yash|Rocky;Sanjay Dutt|Adheera;Srinidhi Shetty|Reena;Raveena Tandon|Ramika Sen"
-  ),
-  "Brahmastra": makeCast(
-    "Ranbir Kapoor|Shiva;Alia Bhatt|Isha;Amitabh Bachchan|Guru;Mouni Roy|Junoon"
-  ),
-  "War": makeCast(
-    "Hrithik Roshan|Kabir;Tiger Shroff|Khalid;Vaani Kapoor|Naina"
-  ),
-  "Tiger 3": makeCast(
-    "Salman Khan|Avinash Tiger Singh Rathore;Katrina Kaif|Zoya;Emraan Hashmi|Aatish"
-  ),
-  "Bajrangi Bhaijaan": makeCast(
-    "Salman Khan|Pawan Kumar Chaturvedi;Harshaali Malhotra|Munni;Kareena Kapoor|Rasika;Nawazuddin Siddiqui|Chand Nawab"
-  ),
-  "Pushpa": makeCast(
-    "Allu Arjun|Pushpa Raj;Rashmika Mandanna|Srivalli;Fahadh Faasil|Bhanwar Singh Shekhawat"
-  ),
-  "RRR": makeCast(
-    "Ram Charan|Alluri Sitarama Raju;N. T. Rama Rao Jr.|Komaram Bheem;Alia Bhatt|Sita;Ajay Devgn|Venkata Rama Raju"
-  ),
-  "Sultan": makeCast(
-    "Salman Khan|Sultan Ali Khan;Anushka Sharma|Aarfa;Randeep Hooda|Fateh Singh"
-  ),
-  "Drishyam 2": makeCast(
-    "Ajay Devgn|Vijay Salgaonkar;Akshaye Khanna|Tarun Ahlawat;Tabu|Meera Deshmukh;Shriya Saran|Nandini Salgaonkar"
-  ),
-  "Kantara": makeCast(
-    "Rishab Shetty|Shiva;Sapthami Gowda|Leela;Kishore|Murali"
-  ),
-  "Chhaava": makeCast(
-    "Vicky Kaushal|Chhatrapati Sambhaji Maharaj;Rashmika Mandanna|Yesubai;Akshaye Khanna|Aurangzeb"
-  ),
-  "Stree 2": makeCast(
-    "Rajkummar Rao|Vicky;Shraddha Kapoor|Stree;Aparshakti Khurana|Bittu;Pankaj Tripathi|Rudra"
-  ),
-  "Fighter": makeCast(
-    "Hrithik Roshan|Shamsher Pathania;Deepika Padukone|Minal Rathore;Anil Kapoor|Rakesh Jai Singh"
-  ),
-  "Shershaah": makeCast(
-    "Sidharth Malhotra|Captain Vikram Batra;Kiara Advani|Dimple Cheema"
-  ),
-  "Laapataa Ladies": makeCast(
-    "Nitanshi Goel|Phool Kumari;Pratibha Ranta|Jaya;Sparsh Shrivastava|Deepak;Ravi Kishan|Shyam Manohar"
-  ),
+  "Jawan": makeCast("Shah Rukh Khan|Azad Rathore / Vikram Rathore;Nayanthara|Narmada;Vijay Sethupathi|Kalee;Deepika Padukone|Aishwarya"),
+  "Pathaan": makeCast("Shah Rukh Khan|Pathaan;Deepika Padukone|Rubina;John Abraham|Jim;Dimple Kapadia|Nandini"),
+  "Animal": makeCast("Ranbir Kapoor|Ranvijay Singh;Rashmika Mandanna|Geetanjali;Anil Kapoor|Balbir Singh;Bobby Deol|Abrar Haque"),
+  "Dangal": makeCast("Aamir Khan|Mahavir Singh Phogat;Sakshi Tanwar|Daya Kaur;Fatima Sana Shaikh|Geeta Phogat;Sanya Malhotra|Babita Kumari"),
+  "3 Idiots": makeCast("Aamir Khan|Rancho;R. Madhavan|Farhan;Sharman Joshi|Raju;Kareena Kapoor|Pia"),
+  "KGF Chapter 2": makeCast("Yash|Rocky;Sanjay Dutt|Adheera;Srinidhi Shetty|Reena;Raveena Tandon|Ramika Sen"),
+  "Brahmastra": makeCast("Ranbir Kapoor|Shiva;Alia Bhatt|Isha;Amitabh Bachchan|Guru;Mouni Roy|Junoon"),
+  "War": makeCast("Hrithik Roshan|Kabir;Tiger Shroff|Khalid;Vaani Kapoor|Naina"),
+  "Tiger 3": makeCast("Salman Khan|Avinash Tiger Singh Rathore;Katrina Kaif|Zoya;Emraan Hashmi|Aatish"),
+  "Bajrangi Bhaijaan": makeCast("Salman Khan|Pawan Kumar Chaturvedi;Harshaali Malhotra|Munni;Kareena Kapoor|Rasika;Nawazuddin Siddiqui|Chand Nawab"),
+  "Pushpa": makeCast("Allu Arjun|Pushpa Raj;Rashmika Mandanna|Srivalli;Fahadh Faasil|Bhanwar Singh Shekhawat"),
+  "RRR": makeCast("Ram Charan|Alluri Sitarama Raju;N. T. Rama Rao Jr.|Komaram Bheem;Alia Bhatt|Sita;Ajay Devgn|Venkata Rama Raju"),
+  "Sultan": makeCast("Salman Khan|Sultan Ali Khan;Anushka Sharma|Aarfa;Randeep Hooda|Fateh Singh"),
+  "Drishyam 2": makeCast("Ajay Devgn|Vijay Salgaonkar;Akshaye Khanna|Tarun Ahlawat;Tabu|Meera Deshmukh;Shriya Saran|Nandini Salgaonkar"),
+  "Kantara": makeCast("Rishab Shetty|Shiva;Sapthami Gowda|Leela;Kishore|Murali"),
+  "Chhaava": makeCast("Vicky Kaushal|Chhatrapati Sambhaji Maharaj;Rashmika Mandanna|Yesubai;Akshaye Khanna|Aurangzeb"),
+  "Stree 2": makeCast("Rajkummar Rao|Vicky;Shraddha Kapoor|Stree;Aparshakti Khurana|Bittu;Pankaj Tripathi|Rudra"),
+  "Fighter": makeCast("Hrithik Roshan|Shamsher Pathania;Deepika Padukone|Minal Rathore;Anil Kapoor|Rakesh Jai Singh"),
+  "Shershaah": makeCast("Sidharth Malhotra|Captain Vikram Batra;Kiara Advani|Dimple Cheema"),
+  "Laapataa Ladies": makeCast("Nitanshi Goel|Phool Kumari;Pratibha Ranta|Jaya;Sparsh Shrivastava|Deepak;Ravi Kishan|Shyam Manohar"),
 
   // HOLLYWOOD
-  "Oppenheimer": makeCast(
-    "Cillian Murphy|J. Robert Oppenheimer;Emily Blunt|Katherine Oppenheimer;Matt Damon|Leslie Groves;Robert Downey Jr.|Lewis Strauss"
-  ),
-  "Barbie": makeCast(
-    "Margot Robbie|Barbie;Ryan Gosling|Ken;America Ferrera|Gloria;Simu Liu|Ken"
-  ),
-  "Dune: Part Two": makeCast(
-    "Timothée Chalamet|Paul Atreides;Zendaya|Chani;Rebecca Ferguson|Lady Jessica;Austin Butler|Feyd-Rautha"
-  ),
-  "Avatar: The Way of Water": makeCast(
-    "Sam Worthington|Jake Sully;Zoe Saldaña|Neytiri;Sigourney Weaver|Kiri;Stephen Lang|Miles Quaritch"
-  ),
-  "Avengers: Endgame": makeCast(
-    "Robert Downey Jr.|Tony Stark;Chris Evans|Steve Rogers;Scarlett Johansson|Natasha Romanoff;Chris Hemsworth|Thor"
-  ),
-  "Titanic": makeCast(
-    "Leonardo DiCaprio|Jack Dawson;Kate Winslet|Rose DeWitt Bukater;Billy Zane|Cal Hockley"
-  ),
-  "The Batman": makeCast(
-    "Robert Pattinson|Bruce Wayne;Zoë Kravitz|Selina Kyle;Paul Dano|Edward Nashton;Colin Farrell|Oswald Cobblepot"
-  ),
-  "Joker": makeCast(
-    "Joaquin Phoenix|Arthur Fleck;Zazie Beetz|Sophie Dumond;Robert De Niro|Murray Franklin"
-  ),
-  "Interstellar": makeCast(
-    "Matthew McConaughey|Cooper;Anne Hathaway|Dr. Amelia Brand;Jessica Chastain|Murph;Michael Caine|Professor Brand"
-  ),
-  "Inception": makeCast(
-    "Leonardo DiCaprio|Dom Cobb;Joseph Gordon-Levitt|Arthur;Elliot Page|Ariadne;Tom Hardy|Eames"
-  ),
-  "Spider-Man: No Way Home": makeCast(
-    "Tom Holland|Peter Parker;Zendaya|MJ;Benedict Cumberbatch|Doctor Strange;Jacob Batalon|Ned Leeds"
-  ),
-  "The Dark Knight": makeCast(
-    "Christian Bale|Bruce Wayne;Heath Ledger|Joker;Aaron Eckhart|Harvey Dent;Michael Caine|Alfred"
-  ),
-  "Frozen": makeCast(
-    "Kristen Bell|Anna;Idina Menzel|Elsa;Jonathan Groff|Kristoff;Josh Gad|Olaf"
-  ),
-  "Black Panther": makeCast(
-    "Chadwick Boseman|T'Challa;Michael B. Jordan|Erik Killmonger;Lupita Nyong'o|Nakia;Danai Gurira|Okoye"
-  ),
-  "Doctor Strange": makeCast(
-    "Benedict Cumberbatch|Stephen Strange;Chiwetel Ejiofor|Mordo;Rachel McAdams|Christine Palmer;Tilda Swinton|Ancient One"
-  ),
-  "The Conjuring": makeCast(
-    "Vera Farmiga|Lorraine Warren;Patrick Wilson|Ed Warren;Lili Taylor|Carolyn Perron;Ron Livingston|Roger Perron"
-  ),
-  "Mission Impossible": makeCast(
-    "Tom Cruise|Ethan Hunt;Hayley Atwell|Grace;Ving Rhames|Luther Stickell;Simon Pegg|Benji Dunn"
-  ),
-  "Jurassic World": makeCast(
-    "Chris Pratt|Owen Grady;Bryce Dallas Howard|Claire Dearing;Vincent D'Onofrio|Vic Hoskins"
-  ),
-  "John Wick 4": makeCast(
-    "Keanu Reeves|John Wick;Donnie Yen|Caine;Bill Skarsgård|Marquis Vincent de Gramont;Laurence Fishburne|Bowery King"
-  ),
-  "The Lion King": makeCast(
-    "Donald Glover|Simba;Beyoncé|Nala;James Earl Jones|Mufasa;Chiwetel Ejiofor|Scar"
-  ),
+  "Oppenheimer": makeCast("Cillian Murphy|J. Robert Oppenheimer;Emily Blunt|Katherine Oppenheimer;Matt Damon|Leslie Groves;Robert Downey Jr.|Lewis Strauss"),
+  "Barbie": makeCast("Margot Robbie|Barbie;Ryan Gosling|Ken;America Ferrera|Gloria;Simu Liu|Ken"),
+  "Dune: Part Two": makeCast("Timothée Chalamet|Paul Atreides;Zendaya|Chani;Rebecca Ferguson|Lady Jessica;Austin Butler|Feyd-Rautha"),
+  "Avatar: The Way of Water": makeCast("Sam Worthington|Jake Sully;Zoe Saldaña|Neytiri;Sigourney Weaver|Kiri;Stephen Lang|Miles Quaritch"),
+  "Avengers: Endgame": makeCast("Robert Downey Jr.|Tony Stark;Chris Evans|Steve Rogers;Scarlett Johansson|Natasha Romanoff;Chris Hemsworth|Thor"),
+  "Titanic": makeCast("Leonardo DiCaprio|Jack Dawson;Kate Winslet|Rose DeWitt Bukater;Billy Zane|Cal Hockley"),
+  "The Batman": makeCast("Robert Pattinson|Bruce Wayne;Zoë Kravitz|Selina Kyle;Paul Dano|Edward Nashton;Colin Farrell|Oswald Cobblepot"),
+  "Joker": makeCast("Joaquin Phoenix|Arthur Fleck;Zazie Beetz|Sophie Dumond;Robert De Niro|Murray Franklin"),
+  "Interstellar": makeCast("Matthew McConaughey|Cooper;Anne Hathaway|Dr. Amelia Brand;Jessica Chastain|Murph;Michael Caine|Professor Brand"),
+  "Inception": makeCast("Leonardo DiCaprio|Dom Cobb;Joseph Gordon-Levitt|Arthur;Elliot Page|Ariadne;Tom Hardy|Eames"),
+  "Spider-Man: No Way Home": makeCast("Tom Holland|Peter Parker;Zendaya|MJ;Benedict Cumberbatch|Doctor Strange;Jacob Batalon|Ned Leeds"),
+  "The Dark Knight": makeCast("Christian Bale|Bruce Wayne;Heath Ledger|Joker;Aaron Eckhart|Harvey Dent;Michael Caine|Alfred"),
+  "Frozen": makeCast("Kristen Bell|Anna;Idina Menzel|Elsa;Jonathan Groff|Kristoff;Josh Gad|Olaf"),
+  "Black Panther": makeCast("Chadwick Boseman|T'Challa;Michael B. Jordan|Erik Killmonger;Lupita Nyong'o|Nakia;Danai Gurira|Okoye"),
+  "Doctor Strange": makeCast("Benedict Cumberbatch|Stephen Strange;Chiwetel Ejiofor|Mordo;Rachel McAdams|Christine Palmer;Tilda Swinton|Ancient One"),
+  "The Conjuring": makeCast("Vera Farmiga|Lorraine Warren;Patrick Wilson|Ed Warren;Lili Taylor|Carolyn Perron;Ron Livingston|Roger Perron"),
+  "Mission Impossible": makeCast("Tom Cruise|Ethan Hunt;Hayley Atwell|Grace;Ving Rhames|Luther Stickell;Simon Pegg|Benji Dunn"),
+  "Jurassic World": makeCast("Chris Pratt|Owen Grady;Bryce Dallas Howard|Claire Dearing;Vincent D'Onofrio|Vic Hoskins"),
+  "John Wick 4": makeCast("Keanu Reeves|John Wick;Donnie Yen|Caine;Bill Skarsgård|Marquis Vincent de Gramont;Laurence Fishburne|Bowery King"),
+  "The Lion King": makeCast("Donald Glover|Simba;Beyoncé|Nala;James Earl Jones|Mufasa;Chiwetel Ejiofor|Scar"),
 
-  // TRENDING / UPCOMING BOLLYWOOD
-  "King": makeCast(
-    "Shah Rukh Khan|Role TBA;Suhana Khan|Role TBA;Deepika Padukone|Role TBA;Abhishek Bachchan|Role TBA;Anil Kapoor|Role TBA"
-  ),
-
+  // UPCOMING
+  "King": makeCast("Shah Rukh Khan|Role TBA;Suhana Khan|Role TBA;Deepika Padukone|Role TBA;Abhishek Bachchan|Role TBA;Anil Kapoor|Role TBA"),
   "Golmaal 5": [],
-
-  "Tumbbad II": makeCast(
-    "Sohum Shah|Role TBA;Nawazuddin Siddiqui|Role TBA;Alia Bhatt|Role TBA"
-  ),
-
-  "Shakti Shalini": makeCast(
-    "Aneet Padda|Role TBA"
-  ),
-
+  "Tumbbad II": makeCast("Sohum Shah|Role TBA;Nawazuddin Siddiqui|Role TBA;Alia Bhatt|Role TBA"),
+  "Shakti Shalini": makeCast("Aneet Padda|Role TBA"),
   "Dada - The Sourav Ganguli Story": [],
-
-  // TRENDING / UPCOMING HOLLYWOOD
-  "Avengers: Doomsday": makeCast(
-    "Robert Downey Jr.|Victor von Doom;Chris Evans|Steve Rogers;Chris Hemsworth|Thor;Pedro Pascal|Reed Richards;Paul Rudd|Scott Lang;Anthony Mackie|Sam Wilson;Florence Pugh|Yelena Belova;Vanessa Kirby|Sue Storm;Ebon Moss-Bachrach|Ben Grimm;Wyatt Russell|John Walker;Channing Tatum|Gambit;Simu Liu|Shang-Chi;Ian McKellen|Magneto;Tom Hiddleston|Loki;James Marsden|Cyclops;Patrick Stewart|Professor X;Joseph Quinn|Johnny Storm;Sebastian Stan|Bucky Barnes;David Harbour|Red Guardian;Letitia Wright|Shuri;Lewis Pullman|Sentry;Kelsey Grammer|Beast;Kathryn Newton|Cassie Lang;Danny Ramirez|Joaquin Torres;Winston Duke|M'Baku;Alan Cumming|Nightcrawler;Hannah John-Kamen|Ghost;Rebecca Romijn|Mystique;Mabel Cadena|Namora;Tenoch Huerta|Namor"
-  ),
-
-  "Jumanji: Open World": makeCast(
-    "Dwayne Johnson|Dr. Smolder Bravestone;Jack Black|Professor Sheldon Oberon;Kevin Hart|Franklin Finbar;Karen Gillan|Ruby Roundhouse;Alex Wolff|Role TBA;Morgan Turner|Role TBA;Ser'Darius Blain|Role TBA;Madison Iseman|Role TBA;Nick Jonas|Role TBA;Danny DeVito|Role TBA"
-  ),
-
-  "Spider-Man: Brand New Day": makeCast(
-    "Tom Holland|Peter Parker;Zendaya|MJ;Sadie Sink|Role TBA;Jacob Batalon|Ned Leeds;Jon Bernthal|Frank Castle;Florence Pugh|Yelena Belova;Tramell Tillman|Role TBA;Michael Mando|Mac Gargan;Rosario Dawson|Role TBA;Mark Ruffalo|Bruce Banner"
-  ),
-
+  "Avengers: Doomsday": makeCast("Robert Downey Jr.|Victor von Doom;Chris Evans|Steve Rogers;Chris Hemsworth|Thor;Pedro Pascal|Reed Richards;Paul Rudd|Scott Lang;Anthony Mackie|Sam Wilson;Florence Pugh|Yelena Belova;Vanessa Kirby|Sue Storm;Ebon Moss-Bachrach|Ben Grimm;Wyatt Russell|John Walker;Channing Tatum|Gambit;Simu Liu|Shang-Chi;Ian McKellen|Magneto;Tom Hiddleston|Loki;James Marsden|Cyclops;Patrick Stewart|Professor X;Joseph Quinn|Johnny Storm;Sebastian Stan|Bucky Barnes;David Harbour|Red Guardian;Letitia Wright|Shuri;Lewis Pullman|Sentry;Kelsey Grammer|Beast;Kathryn Newton|Cassie Lang;Danny Ramirez|Joaquin Torres;Winston Duke|M'Baku;Alan Cumming|Nightcrawler;Hannah John-Kamen|Ghost;Rebecca Romijn|Mystique;Mabel Cadena|Namora;Tenoch Huerta|Namor"),
+  "Jumanji: Open World": makeCast("Dwayne Johnson|Dr. Smolder Bravestone;Jack Black|Professor Sheldon Oberon;Kevin Hart|Franklin Finbar;Karen Gillan|Ruby Roundhouse;Alex Wolff|Role TBA;Morgan Turner|Role TBA;Ser'Darius Blain|Role TBA;Madison Iseman|Role TBA;Nick Jonas|Role TBA;Danny DeVito|Role TBA"),
+  "Spider-Man: Brand New Day": makeCast("Tom Holland|Peter Parker;Zendaya|MJ;Sadie Sink|Role TBA;Jacob Batalon|Ned Leeds;Jon Bernthal|Frank Castle;Florence Pugh|Yelena Belova;Tramell Tillman|Role TBA;Michael Mando|Mac Gargan;Rosario Dawson|Role TBA;Mark Ruffalo|Bruce Banner"),
   "Avengers: Secret Wars": [],
-
   "The Man with the Bag": [],
-  
+
   // TV SHOWS
-  "Stranger Things": makeCast(
-    "Millie Bobby Brown|Eleven;Finn Wolfhard|Mike Wheeler;David Harbour|Jim Hopper;Winona Ryder|Joyce Byers"
-  ),
-  "Money Heist": makeCast(
-    "Úrsula Corberó|Tokyo;Álvaro Morte|The Professor;Pedro Alonso|Berlin;Itziar Ituño|Raquel Murillo"
-  ),
-  "Wednesday": makeCast(
-    "Jenna Ortega|Wednesday Addams;Emma Myers|Enid Sinclair;Catherine Zeta-Jones|Morticia Addams;Luis Guzmán|Gomez Addams"
-  ),
-  "The Witcher": makeCast(
-    "Henry Cavill|Geralt of Rivia;Anya Chalotra|Yennefer;Freya Allan|Ciri"
-  ),
-  "Game of Thrones": makeCast(
-    "Emilia Clarke|Daenerys Targaryen;Kit Harington|Jon Snow;Peter Dinklage|Tyrion Lannister;Sophie Turner|Sansa Stark"
-  ),
-  "Dark": makeCast(
-    "Louis Hofmann|Jonas Kahnwald;Lisa Vicari|Martha Nielsen;Andreas Pietschmann|The Stranger"
-  ),
-  "Breaking Bad": makeCast(
-    "Bryan Cranston|Walter White;Aaron Paul|Jesse Pinkman;Anna Gunn|Skyler White;Dean Norris|Hank Schrader"
-  ),
-  "The Last of Us": makeCast(
-    "Pedro Pascal|Joel Miller;Bella Ramsey|Ellie Williams;Anna Torv|Tess"
-  ),
-  "Squid Game": makeCast(
-    "Lee Jung-jae|Seong Gi-hun;Park Hae-soo|Cho Sang-woo;Jung Ho-yeon|Kang Sae-byeok"
-  ),
-  "The Family Man": makeCast(
-    "Manoj Bajpayee|Srikant Tiwari;Priyamani|Suchitra Tiwari;Sharib Hashmi|JK Talpade;Ashlesha Thakur|Dhriti Tiwari"
-  ),
+  "Stranger Things": makeCast("Millie Bobby Brown|Eleven;Finn Wolfhard|Mike Wheeler;David Harbour|Jim Hopper;Winona Ryder|Joyce Byers"),
+  "Money Heist": makeCast("Úrsula Corberó|Tokyo;Álvaro Morte|The Professor;Pedro Alonso|Berlin;Itziar Ituño|Raquel Murillo"),
+  "Wednesday": makeCast("Jenna Ortega|Wednesday Addams;Emma Myers|Enid Sinclair;Catherine Zeta-Jones|Morticia Addams;Luis Guzmán|Gomez Addams"),
+  "The Witcher": makeCast("Henry Cavill|Geralt of Rivia;Anya Chalotra|Yennefer;Freya Allan|Ciri"),
+  "Game of Thrones": makeCast("Emilia Clarke|Daenerys Targaryen;Kit Harington|Jon Snow;Peter Dinklage|Tyrion Lannister;Sophie Turner|Sansa Stark"),
+  "Dark": makeCast("Louis Hofmann|Jonas Kahnwald;Lisa Vicari|Martha Nielsen;Andreas Pietschmann|The Stranger"),
+  "Breaking Bad": makeCast("Bryan Cranston|Walter White;Aaron Paul|Jesse Pinkman;Anna Gunn|Skyler White;Dean Norris|Hank Schrader"),
+  "The Last of Us": makeCast("Pedro Pascal|Joel Miller;Bella Ramsey|Ellie Williams;Anna Torv|Tess"),
+  "Squid Game": makeCast("Lee Jung-jae|Seong Gi-hun;Park Hae-soo|Cho Sang-woo;Jung Ho-yeon|Kang Sae-byeok"),
+  "The Family Man": makeCast("Manoj Bajpayee|Srikant Tiwari;Priyamani|Suchitra Tiwari;Sharib Hashmi|JK Talpade;Ashlesha Thakur|Dhriti Tiwari"),
 };
 
+// BOLLYWOOD + HOLLYWOOD MOVIES
 const movies = [
-  // Bollywood - 20
   { title: "Jawan", wiki: "Jawan (film)", category: "Bollywood", year: 2023 },
   { title: "Pathaan", wiki: "Pathaan (film)", category: "Bollywood", year: 2023 },
   { title: "Animal", wiki: "Animal (2023 Indian film)", category: "Bollywood", year: 2023 },
@@ -233,7 +106,6 @@ const movies = [
   { title: "Shershaah", wiki: "Shershaah", category: "Bollywood", year: 2021 },
   { title: "Laapataa Ladies", wiki: "Laapataa Ladies", category: "Bollywood", year: 2024 },
 
-  // Hollywood - 20
   { title: "Oppenheimer", wiki: "Oppenheimer (film)", category: "Hollywood", year: 2023 },
   { title: "Barbie", wiki: "Barbie (film)", category: "Hollywood", year: 2023 },
   { title: "Dune: Part Two", wiki: "Dune: Part Two", category: "Hollywood", year: 2024 },
@@ -256,6 +128,40 @@ const movies = [
   { title: "The Lion King", wiki: "The Lion King (2019 film)", category: "Hollywood", year: 2019 },
 ];
 
+// 30 GUJARATI MOVIES
+const gujaratiMovies = [
+  { title: "Hellaro", wiki: "Hellaro", category: "Gujarati", year: 2019 },
+  { title: "Chaal Jeevi Laiye!", wiki: "Chaal Jeevi Laiye", category: "Gujarati", year: 2019 },
+  { title: "Chhello Divas", wiki: "Chhello Divas", category: "Gujarati", year: 2015 },
+  { title: "Bey Yaar", wiki: "Bey Yaar", category: "Gujarati", year: 2014 },
+  { title: "Reva", wiki: "Reva (film)", category: "Gujarati", year: 2018 },
+  { title: "Wrong Side Raju", wiki: "Wrong Side Raju", category: "Gujarati", year: 2016 },
+  { title: "Kevi Rite Jaish", wiki: "Kevi Rite Jaish", category: "Gujarati", year: 2012 },
+  { title: "The Good Road", wiki: "The Good Road", category: "Gujarati", year: 2013 },
+  { title: "Chal Man Jeetva Jaiye", wiki: "Chal Man Jeetva Jaiye", category: "Gujarati", year: 2017 },
+  { title: "Love Ni Bhavai", wiki: "Love Ni Bhavai", category: "Gujarati", year: 2017 },
+  { title: "Chhello Show", wiki: "Last Film Show", category: "Gujarati", year: 2021 },
+  { title: "Dhh", wiki: "Dhh", category: "Gujarati", year: 2018 },
+  { title: "Shu Thayu?", wiki: "Shu Thayu?", category: "Gujarati", year: 2018 },
+  { title: "Golkeri", wiki: "Golkeri", category: "Gujarati", year: 2020 },
+  { title: "Fakt Mahilao Maate", wiki: "Fakt Mahilao Maate", category: "Gujarati", year: 2022 },
+  { title: "Naadi Dosh", wiki: "Naadi Dosh", category: "Gujarati", year: 2022 },
+  { title: "Vash", wiki: "Vash (film)", category: "Gujarati", year: 2023 },
+  { title: "Jhamkudi", wiki: "Jhamkudi", category: "Gujarati", year: 2024 },
+  { title: "Kasoombo", wiki: "Kasoombo", category: "Gujarati", year: 2024 },
+  { title: "Fakt Purusho Maate", wiki: "Fakt Purusho Maate", category: "Gujarati", year: 2024 },
+  { title: "Laalo - Krishna Sada Sahaayate", wiki: "Laalo - Krishna Sada Sahaayate", category: "Gujarati", year: 2025 },
+  { title: "Pravas", wiki: "Pravas", category: "Gujarati", year: 2025 },
+  { title: "Umbarro", wiki: "Umbarro", category: "Gujarati", year: 2025 },
+  { title: "Chaniya Toli", wiki: "Chaniya Toli", category: "Gujarati", year: 2025 },
+  { title: "Misri", wiki: "Misri", category: "Gujarati", year: 2025 },
+  { title: "Dusshera", wiki: "Dusshera", category: "Gujarati", year: 2025 },
+  { title: "Mara Pappa Superhero", wiki: "Mara Pappa Superhero", category: "Gujarati", year: 2021 },
+  { title: "Raado", wiki: "Raado", category: "Gujarati", year: 2022 },
+  { title: "Aum Mangalam Singlem", wiki: "Aum Mangalam Singlem", category: "Gujarati", year: 2022 },
+  { title: "Gandhi & Co.", wiki: "Gandhi & Co.", category: "Gujarati", year: 2023 },
+];
+
 const shows = [
   { title: "Stranger Things", wiki: "Stranger Things", year: 2016 },
   { title: "Money Heist", wiki: "Money Heist", year: 2017 },
@@ -274,28 +180,21 @@ const upcoming = [
   { title: "Golmaal 5", wiki: "Golmaal 5", category: "Bollywood" },
   { title: "Tumbbad II", wiki: "Tumbbad 2", category: "Bollywood" },
   { title: "Shakti Shalini", wiki: "Shakti Shalini", category: "Bollywood" },
-  {
-    title: "Dada - The Sourav Ganguli Story",
-    wiki: "Dada: The Sourav Ganguly Story",
-    category: "Bollywood",
-  },
+  { title: "Dada - The Sourav Ganguli Story", wiki: "Dada: The Sourav Ganguly Story", category: "Bollywood" },
   { title: "Avengers: Doomsday", wiki: "Avengers: Doomsday", category: "Hollywood" },
   { title: "Jumanji: Open World", wiki: "Jumanji: Open World", category: "Hollywood" },
-  {
-    title: "Spider-Man: Brand New Day",
-    wiki: "Spider-Man: Brand New Day",
-    category: "Hollywood",
-  },
+  { title: "Spider-Man: Brand New Day", wiki: "Spider-Man: Brand New Day", category: "Hollywood" },
   { title: "Avengers: Secret Wars", wiki: "Avengers: Secret Wars", category: "Hollywood" },
   { title: "The Man with the Bag", wiki: "The Man with the Bag", category: "Hollywood" },
 ].map((item) => ({ ...item, type: "Coming Soon" }));
 
-const trendingMovies = upcoming.map((item) => ({
-  ...item,
-  badge: "TRENDING",
-}));
+const trendingMovies = upcoming.map((item) => ({ ...item, badge: "TRENDING" }));
 
-const allMovies = movies.map((item) => ({ ...item, type: "Movie" }));
+const allMovies = [
+  ...movies.map((item) => ({ ...item, type: "Movie" })),
+  ...gujaratiMovies.map((item) => ({ ...item, type: "Movie" })),
+];
+
 const allContent = [...allMovies, ...shows];
 
 // POSTER SYSTEM
@@ -304,31 +203,71 @@ const posterCache = new Map();
 const normalizeTitle = (value = "") =>
   value.toLowerCase().replace(/[^a-z0-9]/g, "");
 
+// Special search terms and alternate titles for these two upcoming movies
+const POSTER_ALIASES = {
+  "King": {
+    search: [
+      "King Shah Rukh Khan",
+      "King 2026 Shah Rukh Khan film",
+      "Shah Rukh Khan King upcoming movie"
+    ],
+    match: [
+      "King",
+      "King (upcoming film)",
+      "King 2026"
+    ]
+  },
+
+  "Dada - The Sourav Ganguli Story": {
+    search: [
+      "Dada The Sourav Ganguly Story",
+      "Dada Sourav Ganguly",
+      "Sourav Ganguly biopic",
+      "Dada Sourav Ganguly biopic"
+    ],
+    match: [
+      "Dada - The Sourav Ganguli Story",
+      "Dada: The Sourav Ganguly Story",
+      "Dada The Sourav Ganguly Story",
+      "Dada Sourav Ganguly",
+      "Sourav Ganguly"
+    ]
+  }
+};
+
 async function fetchPoster(item) {
   const isObject = typeof item === "object";
   const title = isObject ? item.title : item;
   const wiki = isObject ? item.wiki : "";
   const year = isObject ? item.year : null;
-
-  const type =
-    isObject && item.type === "TV Show"
-      ? "series"
-      : "movie";
-
+  const type = isObject && item.type === "TV Show" ? "series" : "movie";
   const cacheKey = `${type}-${title}-${year || ""}`;
 
   if (posterCache.has(cacheKey)) {
     return posterCache.get(cacheKey);
   }
 
-  const searchTerms = [...new Set([title, wiki].filter(Boolean))];
+  const special = POSTER_ALIASES[title];
+
+  const searchTerms = [
+    ...(special?.search || []),
+    title,
+    wiki
+  ].filter(Boolean);
+
+  const uniqueSearchTerms = [...new Set(searchTerms)];
+
+  const acceptedTitles = [
+    title,
+    wiki,
+    ...(special?.match || [])
+  ]
+    .filter(Boolean)
+    .map(normalizeTitle);
 
   try {
-    for (const searchTerm of searchTerms) {
-      const url = `https://api.streamx.qzz.io/search?q=${encodeURIComponent(
-        searchTerm
-      )}&type=${type}`;
-
+    for (const searchTerm of uniqueSearchTerms) {
+      const url = `https://api.streamx.qzz.io/search?q=${encodeURIComponent(searchTerm)}&type=${type}`;
       const response = await fetch(url);
 
       if (!response.ok) continue;
@@ -338,23 +277,24 @@ async function fetchPoster(item) {
 
       const exactMatches = results.filter((result) => {
         const resultTitle = result.title || result.name || "";
-
-        return (
-          normalizeTitle(resultTitle) === normalizeTitle(title) ||
-          normalizeTitle(resultTitle) === normalizeTitle(wiki)
-        );
+        return acceptedTitles.includes(normalizeTitle(resultTitle));
       });
 
-      const matchingItem =
-        exactMatches.find((result) => {
-          if (!year) return true;
+      // Prefer exact year match when a year is provided
+      let matchingItem = exactMatches.find((result) => {
+        if (!year) return true;
 
-          const resultYear = String(
-            result.releaseInfo || result.year || ""
-          ).slice(0, 4);
+        const resultYear = String(
+          result.releaseInfo || result.year || ""
+        ).slice(0, 4);
 
-          return resultYear === String(year);
-        }) || exactMatches[0];
+        return resultYear === String(year);
+      });
+
+      // If year is unavailable, use the first exact title match
+      if (!matchingItem) {
+        matchingItem = exactMatches[0];
+      }
 
       if (matchingItem?.poster) {
         posterCache.set(cacheKey, matchingItem.poster);
@@ -398,7 +338,6 @@ function PosterCard({ item, onSelect, compact = false }) {
 
   useEffect(() => {
     let active = true;
-
     setPoster(null);
     setLoaded(false);
 
@@ -451,12 +390,7 @@ function PosterCard({ item, onSelect, compact = false }) {
             alt={`${item.title} poster`}
             loading="lazy"
             onError={() => setPoster(null)}
-            style={{
-              height: "100%",
-              width: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
+            style={{ height: "100%", width: "100%", objectFit: "cover", display: "block" }}
           />
         ) : (
           <div
@@ -489,7 +423,7 @@ function PosterCard({ item, onSelect, compact = false }) {
             fontWeight: 800,
           }}
         >
-          {item.badge || (item.type === "Coming Soon" ? "UPCOMING" : item.category.toUpperCase())}
+          {item.badge || (item.type === "Coming Soon" ? "UPCOMING" : (item.category || "MOVIE").toUpperCase())}
         </span>
       </div>
 
@@ -532,18 +466,15 @@ function HeroBanner({ onExplore, onComing }) {
     const timer = setInterval(() => {
       setActive((current) => (current + 1) % slides.length);
     }, 4500);
-
     return () => clearInterval(timer);
   }, [slides.length]);
 
   useEffect(() => {
     let live = true;
     setPoster(null);
-
     fetchPoster(slides[active]).then((image) => {
       if (live) setPoster(image);
     });
-
     return () => {
       live = false;
     };
@@ -571,67 +502,29 @@ function HeroBanner({ onExplore, onComing }) {
         <p style={{ color: GOLD, fontWeight: 900, letterSpacing: 3, margin: "0 0 12px" }}>
           AUREVIX • FEATURED
         </p>
-
-        <h1
-          style={{
-            color: "#FFF4D6",
-            fontSize: "clamp(34px,5vw,60px)",
-            lineHeight: 1.05,
-            margin: "0 0 14px",
-            textShadow: "0 3px 20px #000",
-          }}
-        >
+        <h1 style={{ color: "#FFF4D6", fontSize: "clamp(34px,5vw,60px)", lineHeight: 1.05, margin: "0 0 14px", textShadow: "0 3px 20px #000" }}>
           {movie.title}
         </h1>
-
         <p style={{ color: "#F1E8D5", fontSize: 16, lineHeight: 1.6, maxWidth: 430 }}>
           Discover the next big cinematic experience. Coming soon in theatres.
         </p>
-
         <div style={{ display: "flex", gap: 12, marginTop: 22, flexWrap: "wrap" }}>
           <button
             onClick={() => onComing(movie)}
-            style={{
-              background: `linear-gradient(120deg,#F5E4B2,${GOLD})`,
-              color: BLACK,
-              border: "none",
-              padding: "13px 23px",
-              borderRadius: 30,
-              fontWeight: 900,
-              cursor: "pointer",
-            }}
+            style={{ background: `linear-gradient(120deg,#F5E4B2,${GOLD})`, color: BLACK, border: "none", padding: "13px 23px", borderRadius: 30, fontWeight: 900, cursor: "pointer" }}
           >
             View Movie
           </button>
-
           <button
             onClick={onExplore}
-            style={{
-              background: "rgba(0,0,0,.35)",
-              color: "#FFF1CC",
-              border: `1px solid ${GOLD}`,
-              padding: "13px 23px",
-              borderRadius: 30,
-              fontWeight: 800,
-              cursor: "pointer",
-            }}
+            style={{ background: "rgba(0,0,0,.35)", color: "#FFF1CC", border: `1px solid ${GOLD}`, padding: "13px 23px", borderRadius: 30, fontWeight: 800, cursor: "pointer" }}
           >
             Explore Movies
           </button>
         </div>
       </div>
 
-      <div
-        style={{
-          position: "absolute",
-          bottom: 18,
-          left: 0,
-          right: 0,
-          display: "flex",
-          justifyContent: "center",
-          gap: 9,
-        }}
-      >
+      <div style={{ position: "absolute", bottom: 18, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 9 }}>
         {slides.map((slide, index) => (
           <button
             key={slide.title}
@@ -656,6 +549,7 @@ function HeroBanner({ onExplore, onComing }) {
 export default function Home({ onSelectItem }) {
   const [page, setPage] = useState("Home");
   const [search, setSearch] = useState("");
+  const [selectedMovieCategory, setSelectedMovieCategory] = useState("All Movies");
   const [selectedItem, setSelectedItem] = useState(null);
   const [authMode, setAuthMode] = useState(null);
   const [authMessage, setAuthMessage] = useState("");
@@ -664,6 +558,7 @@ export default function Home({ onSelectItem }) {
   const goTo = (name) => {
     setPage(name);
     setSearch("");
+    setSelectedMovieCategory("All Movies");
     setSelectedItem(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -684,11 +579,9 @@ export default function Home({ onSelectItem }) {
     gap: 20,
   };
 
-  // Selected movie/show ke saath cast details bhi bhejo.
   const selectItem = (item) => {
     const matchedCastKey = Object.keys(CAST_DATA).find(
-      (title) =>
-        normalizeTitle(title) === normalizeTitle(item.title)
+      (title) => normalizeTitle(title) === normalizeTitle(item.title)
     );
 
     const selectedWithCast = {
@@ -700,22 +593,15 @@ export default function Home({ onSelectItem }) {
         [],
     };
 
-    if (onSelectItem) {
-      onSelectItem(selectedWithCast);
-    } else {
-      setSelectedItem(selectedWithCast);
-    }
+    if (onSelectItem) onSelectItem(selectedWithCast);
+    else setSelectedItem(selectedWithCast);
   };
 
   const renderGrid = (items) =>
     items.length ? (
       <div style={gridStyle}>
         {items.map((item) => (
-          <PosterCard
-            key={item.title}
-            item={item}
-            onSelect={selectItem}
-          />
+          <PosterCard key={item.title} item={item} onSelect={selectItem} />
         ))}
       </div>
     ) : (
@@ -735,11 +621,7 @@ export default function Home({ onSelectItem }) {
       >
         {items.slice(0, 5).map((item) => (
           <div key={item.title} style={{ minWidth: 125 }}>
-            <PosterCard
-              compact
-              item={item}
-              onSelect={selectItem}
-            />
+            <PosterCard compact item={item} onSelect={selectItem} />
           </div>
         ))}
       </div>
@@ -750,16 +632,42 @@ export default function Home({ onSelectItem }) {
   const viewAllButton = (label, target) => (
     <button
       onClick={() => goTo(target)}
-      style={{
-        background: "transparent",
-        border: "none",
-        color: GOLD,
-        fontWeight: 800,
-        cursor: "pointer",
-        fontSize: 13,
-      }}
+      style={{ background: "transparent", border: "none", color: GOLD, fontWeight: 800, cursor: "pointer", fontSize: 13 }}
     >
       {label} View All →
+    </button>
+  );
+
+  // BACK TO HOME BUTTON FOR ALL VIEW ALL PAGES
+  const backButton = () => (
+    <button
+      onClick={() => goTo("Home")}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 8,
+        padding: "10px 17px",
+        marginBottom: 22,
+        background: "rgba(232,200,121,0.08)",
+        border: `1px solid ${GOLD}`,
+        borderRadius: 25,
+        color: GOLD,
+        fontSize: 13,
+        fontWeight: 800,
+        cursor: "pointer",
+        transition: "all 0.25s ease",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = GOLD;
+        e.currentTarget.style.color = BLACK;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = "rgba(232,200,121,0.08)";
+        e.currentTarget.style.color = GOLD;
+      }}
+    >
+      <span style={{ fontSize: 17, lineHeight: 1 }}>←</span>
+      Back to Home
     </button>
   );
 
@@ -779,27 +687,98 @@ export default function Home({ onSelectItem }) {
     item.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  const navItems = ["Home", "Movies", "TV Shows", "Coming Soon", "About", "Contact"];
-
-  const searchBox = (placeholder) => (
-    <input
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-      placeholder={placeholder}
-      style={{
-        width: "100%",
-        boxSizing: "border-box",
-        padding: 15,
-        marginBottom: 30,
-        background: "#1B2741",
-        border: "1px solid rgba(232,200,121,0.35)",
-        borderRadius: 10,
-        color: "#fff",
-        fontSize: 15,
-        outline: "none",
-      }}
-    />
+  const filteredGujarati = gujaratiMovies.filter((item) =>
+    item.title.toLowerCase().includes(search.toLowerCase())
   );
+
+  // HOME SEARCH CATEGORY FILTER
+  const homeSearchResults = allMovies.filter((item) => {
+    const matchesCategory =
+      selectedMovieCategory === "All Movies" ||
+      item.category === selectedMovieCategory;
+
+    const matchesSearch = item.title
+      .toLowerCase()
+      .includes(search.toLowerCase().trim());
+
+    return matchesCategory && matchesSearch;
+  });
+
+  const navItems = ["Home", "Movies", "Bollywood", "Hollywood", "Gujarati", "TV Shows", "Coming Soon", "About", "Contact"];
+
+  // COMPACT SEARCH BOX WITH SEARCH ICON FOR VIEW ALL PAGES
+  const searchBox = (placeholder) => (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        width: "min(100%, 380px)",
+        boxSizing: "border-box",
+        padding: "0 14px",
+        marginBottom: 28,
+        background: "#1B2741",
+        border: "1px solid rgba(232,200,121,0.4)",
+        borderRadius: 30,
+        boxShadow: "0 5px 18px rgba(0,0,0,0.18)",
+      }}
+    >
+      <span style={{ color: GOLD, display: "flex", alignItems: "center", flexShrink: 0 }}>
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-4-4" />
+        </svg>
+      </span>
+
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder={placeholder}
+        aria-label={placeholder}
+        style={{
+          width: "100%",
+          minWidth: 0,
+          padding: "11px 0",
+          background: "transparent",
+          border: "none",
+          outline: "none",
+          color: "#FFFFFF",
+          fontSize: 13,
+        }}
+      />
+
+      {search && (
+        <button
+          onClick={() => setSearch("")}
+          aria-label="Clear search"
+          style={{
+            background: "transparent",
+            border: "none",
+            color: MUTED,
+            fontSize: 19,
+            cursor: "pointer",
+            padding: 0,
+            flexShrink: 0,
+          }}
+        >
+          ×
+        </button>
+      )}
+    </div>
+  );
+
+  // HOME SEARCH CATEGORIES
+  const homeSearchCategories = ["All Movies", "Bollywood", "Hollywood", "Gujarati"];
 
   const openAuth = (mode) => {
     setAuthMessage("");
@@ -808,14 +787,7 @@ export default function Home({ onSelectItem }) {
   };
 
   return (
-    <div
-      style={{
-        background: BLACK,
-        color: "#fff",
-        minHeight: "100vh",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
+    <div style={{ background: BLACK, color: "#fff", minHeight: "100vh", fontFamily: "Arial, sans-serif" }}>
       {/* NAVBAR */}
       <header
         style={{
@@ -836,13 +808,7 @@ export default function Home({ onSelectItem }) {
       >
         <div
           onClick={() => goTo("Home")}
-          style={{
-            color: GOLD,
-            fontSize: 28,
-            fontWeight: 900,
-            letterSpacing: 3,
-            cursor: "pointer",
-          }}
+          style={{ color: GOLD, fontSize: 28, fontWeight: 900, letterSpacing: 3, cursor: "pointer" }}
         >
           AUREVIX<span style={{ color: "#fff" }}>.</span>
         </div>
@@ -855,9 +821,7 @@ export default function Home({ onSelectItem }) {
                 if (item === "About" || item === "Contact") {
                   setPage("Home");
                   setTimeout(() => {
-                    document.getElementById(item.toLowerCase())?.scrollIntoView({
-                      behavior: "smooth",
-                    });
+                    document.getElementById(item.toLowerCase())?.scrollIntoView({ behavior: "smooth" });
                   }, 100);
                 } else {
                   goTo(item);
@@ -878,31 +842,13 @@ export default function Home({ onSelectItem }) {
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           <button
             onClick={() => openAuth("login")}
-            style={{
-              color: "#F4E8C8",
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(232,200,121,0.55)",
-              padding: "11px 19px",
-              borderRadius: 30,
-              fontWeight: 800,
-              cursor: "pointer",
-            }}
+            style={{ color: "#F4E8C8", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(232,200,121,0.55)", padding: "11px 19px", borderRadius: 30, fontWeight: 800, cursor: "pointer" }}
           >
             Log In
           </button>
-
           <button
             onClick={() => openAuth("register")}
-            style={{
-              color: BLACK,
-              background: "linear-gradient(120deg,#F5E4B2,#D9B65D)",
-              border: "1px solid #F0D99A",
-              padding: "11px 19px",
-              borderRadius: 30,
-              fontWeight: 900,
-              cursor: "pointer",
-              boxShadow: "0 7px 22px rgba(217,182,93,0.18)",
-            }}
+            style={{ color: BLACK, background: "linear-gradient(120deg,#F5E4B2,#D9B65D)", border: "1px solid #F0D99A", padding: "11px 19px", borderRadius: 30, fontWeight: 900, cursor: "pointer", boxShadow: "0 7px 22px rgba(217,182,93,0.18)" }}
           >
             Join AUREVIX
           </button>
@@ -912,142 +858,233 @@ export default function Home({ onSelectItem }) {
       {/* HOME PAGE */}
       {page === "Home" && (
         <>
-          <HeroBanner
-            onExplore={() => goTo("Movies")}
-            onComing={(item) => selectItem(item)}
-          />
+          <HeroBanner onExplore={() => goTo("Movies")} onComing={(item) => selectItem(item)} />
 
-          {/* SEARCH BAR */}
-          <section style={{ padding: "22px 6% 8px", background: "#080D18" }}>
-            {searchBox("Search movies and TV shows...")}
-
-            {search && (
-              <>
-                <h2 style={headingStyle}>Search Results</h2>
-                {renderGrid(filteredHome)}
-              </>
-            )}
-          </section>
-
-          {/* TRENDING MOVIES */}
-          <section style={{ ...sectionStyle, paddingTop: 25, paddingBottom: 28 }}>
+          {/* HOME SEARCH BAR + MOVIE CATEGORY FILTER */}
+          <section
+            style={{
+              padding: "22px 6% 25px",
+              background: "#080D18",
+              borderBottom: "1px solid rgba(232,200,121,0.12)",
+            }}
+          >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                marginBottom: 16,
+                justifyContent: "center",
+                gap: 18,
+                flexWrap: "wrap",
+                maxWidth: 1100,
+                margin: "0 auto",
               }}
             >
+              {/* HOME SEARCH INPUT */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  width: "min(100%, 340px)",
+                  minWidth: 230,
+                  boxSizing: "border-box",
+                  padding: "0 15px",
+                  background: "#1B2741",
+                  border: "1px solid rgba(232,200,121,0.4)",
+                  borderRadius: 30,
+                  boxShadow: "0 5px 18px rgba(0,0,0,0.18)",
+                }}
+              >
+                <span
+                  style={{
+                    color: GOLD,
+                    fontSize: 19,
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <svg
+                    width="19"
+                    height="19"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="m20 20-4-4" />
+                  </svg>
+                </span>
+
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search movies..."
+                  aria-label="Search movies"
+                  style={{
+                    width: "100%",
+                    minWidth: 0,
+                    padding: "12px 0",
+                    background: "transparent",
+                    border: "none",
+                    outline: "none",
+                    color: "#FFFFFF",
+                    fontSize: 13,
+                  }}
+                />
+
+                {search && (
+                  <button
+                    onClick={() => setSearch("")}
+                    aria-label="Clear search"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      color: MUTED,
+                      fontSize: 19,
+                      cursor: "pointer",
+                      padding: 0,
+                    }}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+
+              {/* CATEGORY BUTTONS */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 9,
+                  flexWrap: "wrap",
+                }}
+              >
+                {homeSearchCategories.map((category) => {
+                  const isActive = selectedMovieCategory === category;
+
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => setSelectedMovieCategory(category)}
+                      style={{
+                        padding: "10px 17px",
+                        borderRadius: 25,
+                        border: isActive
+                          ? `1px solid ${GOLD}`
+                          : "1px solid rgba(232,200,121,0.3)",
+                        background: isActive
+                          ? `linear-gradient(120deg,#F5E4B2,${GOLD})`
+                          : "rgba(255,255,255,0.04)",
+                        color: isActive ? BLACK : "#E5E9F2",
+                        fontSize: 12,
+                        fontWeight: 800,
+                        cursor: "pointer",
+                        transition: "all 0.25s ease",
+                        boxShadow: isActive
+                          ? "0 5px 16px rgba(232,200,121,0.18)"
+                          : "none",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {category}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* FILTERED MOVIE RESULTS */}
+            {(search.trim() !== "" || selectedMovieCategory !== "All Movies") && (
+              <div style={{ maxWidth: 1200, margin: "30px auto 0" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    flexWrap: "wrap",
+                    gap: 10,
+                    marginBottom: 20,
+                  }}
+                >
+                  <h2
+                    style={{
+                      ...headingStyle,
+                      margin: 0,
+                      fontSize: 23,
+                    }}
+                  >
+                    {search.trim()
+                      ? `${selectedMovieCategory} Search Results`
+                      : selectedMovieCategory}
+                  </h2>
+
+                  <span style={{ color: MUTED, fontSize: 12 }}>
+                    {homeSearchResults.length} Movies Found
+                  </span>
+                </div>
+
+                {renderGrid(homeSearchResults)}
+              </div>
+            )}
+          </section>
+
+          {/* TRENDING */}
+          <section style={{ ...sectionStyle, paddingTop: 25, paddingBottom: 28 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16 }}>
               <h2 style={{ ...headingStyle, margin: 0 }}>🔥 Trending Movies</h2>
               {viewAllButton("Trending", "Coming Soon")}
             </div>
-
             {renderHorizontal(trendingMovies)}
           </section>
 
-          {/* HOLLYWOOD MOVIES */}
-          <section
-            style={{
-              ...sectionStyle,
-              paddingTop: 25,
-              paddingBottom: 28,
-              background: "#0B1220",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                marginBottom: 16,
-              }}
-            >
-              <h2 style={{ ...headingStyle, margin: 0 }}>
-                ⭐ Coming Soon in Hollywood
-              </h2>
+          {/* HOLLYWOOD UPCOMING */}
+          <section style={{ ...sectionStyle, paddingTop: 25, paddingBottom: 28, background: "#0B1220" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16 }}>
+              <h2 style={{ ...headingStyle, margin: 0 }}>⭐ Coming Soon in Hollywood</h2>
               {viewAllButton("Hollywood", "Hollywood")}
             </div>
-
-            {renderHorizontal(
-              trendingMovies.filter((item) => item.category === "Hollywood")
-            )}
+            {renderHorizontal(trendingMovies.filter((item) => item.category === "Hollywood"))}
           </section>
 
-          {/* BOLLYWOOD MOVIES */}
+          {/* BOLLYWOOD */}
           <section style={{ ...sectionStyle, paddingTop: 25, paddingBottom: 28 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                marginBottom: 16,
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16 }}>
               <h2 style={{ ...headingStyle, margin: 0 }}>🎬 Bollywood Movies</h2>
               {viewAllButton("Bollywood", "Bollywood")}
             </div>
+            {renderHorizontal(allMovies.filter((item) => item.category === "Bollywood"))}
+          </section>
 
-            {renderHorizontal(
-              allMovies.filter((item) => item.category === "Bollywood")
-            )}
+          {/* GUJARATI MOVIES SECTION */}
+          <section style={{ ...sectionStyle, paddingTop: 25, paddingBottom: 28, background: "#0B1220" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16 }}>
+              <h2 style={{ ...headingStyle, margin: 0 }}>🎞 Gujarati Movies</h2>
+              {viewAllButton("Gujarati", "Gujarati")}
+            </div>
+            {renderHorizontal(gujaratiMovies)}
           </section>
 
           {/* TV SHOWS */}
-          <section
-            style={{
-              ...sectionStyle,
-              paddingTop: 25,
-              paddingBottom: 28,
-              background: "#0B1220",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                marginBottom: 16,
-              }}
-            >
+          <section style={{ ...sectionStyle, paddingTop: 25, paddingBottom: 28 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16 }}>
               <h2 style={{ ...headingStyle, margin: 0 }}>📺 Popular TV Shows</h2>
               {viewAllButton("TV Shows", "TV Shows")}
             </div>
-
             {renderHorizontal(shows)}
           </section>
 
           {/* MOVIE NIGHT BANNER */}
-          <section
-            style={{
-              ...sectionStyle,
-              background: "linear-gradient(100deg,#253354,#17213A)",
-              textAlign: "center",
-            }}
-          >
-            <h2 style={{ color: GOLD, fontSize: 30 }}>
-              YOUR NEXT MOVIE NIGHT STARTS HERE
-            </h2>
-
-            <p style={{ color: "#D0D6E5" }}>
-              Find your favourites and enjoy the ultimate cinematic experience.
-            </p>
-
+          <section style={{ ...sectionStyle, background: "linear-gradient(100deg,#253354,#17213A)", textAlign: "center" }}>
+            <h2 style={{ color: GOLD, fontSize: 30 }}>YOUR NEXT MOVIE NIGHT STARTS HERE</h2>
+            <p style={{ color: "#D0D6E5" }}>Find your favourites and enjoy the ultimate cinematic experience.</p>
             <button
               onClick={() => goTo("Movies")}
-              style={{
-                background: GOLD,
-                color: BLACK,
-                padding: "13px 25px",
-                border: "none",
-                borderRadius: 8,
-                fontWeight: 800,
-                cursor: "pointer",
-              }}
+              style={{ background: GOLD, color: BLACK, padding: "13px 25px", border: "none", borderRadius: 8, fontWeight: 800, cursor: "pointer" }}
             >
               Browse All Movies
             </button>
@@ -1056,22 +1093,17 @@ export default function Home({ onSelectItem }) {
           {/* ABOUT */}
           <section id="about" style={sectionStyle}>
             <h2 style={headingStyle}>About AUREVIX</h2>
-
             <p style={{ color: MUTED, lineHeight: 1.9, maxWidth: 850 }}>
               AUREVIX is your destination for discovering movies and TV shows.
-              Explore Bollywood and Hollywood collections, find upcoming
-              releases and enjoy a cinematic experience in one place.
+              Explore Bollywood, Hollywood and Gujarati movie collections, find
+              upcoming releases and enjoy a cinematic experience in one place.
             </p>
           </section>
 
           {/* CONTACT */}
           <section id="contact" style={sectionStyle}>
             <h2 style={headingStyle}>Contact Us</h2>
-
-            <p style={{ color: MUTED }}>
-              Have a question or suggestion? Contact the AUREVIX team.
-            </p>
-
+            <p style={{ color: MUTED }}>Have a question or suggestion? Contact the AUREVIX team.</p>
             <p style={{ color: GOLD }}>Email: support@aurevix.com</p>
           </section>
         </>
@@ -1080,81 +1112,72 @@ export default function Home({ onSelectItem }) {
       {/* ALL MOVIES PAGE */}
       {page === "Movies" && (
         <main style={sectionStyle}>
+          {backButton()}
+
           <h1 style={{ color: GOLD, fontSize: 38 }}>Explore All Movies</h1>
-
-          <p style={{ color: MUTED, marginBottom: 30 }}>
-            Explore all Bollywood and Hollywood movies.
-          </p>
-
+          <p style={{ color: MUTED, marginBottom: 30 }}>Explore Bollywood, Hollywood and Gujarati movies.</p>
           {searchBox("Search movies...")}
 
           <h2 style={headingStyle}>Bollywood Movies</h2>
-
-          {renderGrid(
-            filteredMovies.filter((item) => item.category === "Bollywood")
-          )}
+          {renderGrid(filteredMovies.filter((item) => item.category === "Bollywood"))}
 
           <h2 style={{ ...headingStyle, marginTop: 50 }}>Hollywood Movies</h2>
+          {renderGrid(filteredMovies.filter((item) => item.category === "Hollywood"))}
 
-          {renderGrid(
-            filteredMovies.filter((item) => item.category === "Hollywood")
-          )}
+          <h2 style={{ ...headingStyle, marginTop: 50 }}>Gujarati Movies</h2>
+          {renderGrid(filteredMovies.filter((item) => item.category === "Gujarati"))}
         </main>
       )}
 
-      {/* ALL BOLLYWOOD MOVIES PAGE */}
+      {/* BOLLYWOOD PAGE */}
       {page === "Bollywood" && (
         <main style={sectionStyle}>
+          {backButton()}
+
           <h1 style={{ color: GOLD, fontSize: 38 }}>All Bollywood Movies</h1>
-
-          <p style={{ color: MUTED, marginBottom: 30 }}>
-            Explore all Bollywood movies.
-          </p>
-
+          <p style={{ color: MUTED, marginBottom: 30 }}>Explore all Bollywood movies.</p>
           {searchBox("Search Bollywood movies...")}
-
-          {renderGrid(
-            filteredMovies.filter((item) => item.category === "Bollywood")
-          )}
+          {renderGrid(filteredMovies.filter((item) => item.category === "Bollywood"))}
         </main>
       )}
 
-      {/* ALL HOLLYWOOD MOVIES PAGE */}
+      {/* HOLLYWOOD PAGE */}
       {page === "Hollywood" && (
         <main style={sectionStyle}>
+          {backButton()}
+
           <h1 style={{ color: GOLD, fontSize: 38 }}>All Hollywood Movies</h1>
-
-          <p style={{ color: MUTED, marginBottom: 30 }}>
-            Explore all Hollywood movies.
-          </p>
-
+          <p style={{ color: MUTED, marginBottom: 30 }}>Explore all Hollywood movies.</p>
           {searchBox("Search Hollywood movies...")}
+          {renderGrid(filteredMovies.filter((item) => item.category === "Hollywood"))}
 
-          {renderGrid(
-            filteredMovies.filter((item) => item.category === "Hollywood")
-          )}
+          <h2 style={{ ...headingStyle, marginTop: 45 }}>Coming Soon in Hollywood</h2>
+          {renderGrid(filteredUpcoming.filter((item) => item.category === "Hollywood"))}
+        </main>
+      )}
 
-          <h2 style={{ ...headingStyle, marginTop: 45 }}>
-            Coming Soon in Hollywood
-          </h2>
+      {/* GUJARATI PAGE */}
+      {page === "Gujarati" && (
+        <main style={sectionStyle}>
+          {backButton()}
 
-          {renderGrid(
-            filteredUpcoming.filter((item) => item.category === "Hollywood")
-          )}
+          <h1 style={{ color: GOLD, fontSize: 38 }}>Gujarati Movies</h1>
+          <p style={{ color: MUTED, marginBottom: 30 }}>
+            Explore popular Gujarati cinema, family dramas, comedy, thriller and more.
+          </p>
+          {searchBox("Search Gujarati movies...")}
+          {renderGrid(filteredGujarati)}
         </main>
       )}
 
       {/* TV SHOWS PAGE */}
       {page === "TV Shows" && (
         <main style={sectionStyle}>
+          {backButton()}
+
           <h1 style={{ color: GOLD, fontSize: 38 }}>TV Shows</h1>
-
-          <p style={{ color: MUTED, marginBottom: 30 }}>
-            Explore popular TV shows.
-          </p>
-
+          <p style={{ color: MUTED, marginBottom: 30 }}>Explore popular TV shows.</p>
           {searchBox("Search TV shows...")}
-
           {renderGrid(filteredShows)}
         </main>
       )}
@@ -1162,14 +1185,11 @@ export default function Home({ onSelectItem }) {
       {/* COMING SOON PAGE */}
       {page === "Coming Soon" && (
         <main style={sectionStyle}>
+          {backButton()}
+
           <h1 style={{ color: GOLD, fontSize: 38 }}>Trending & Coming Soon</h1>
-
-          <p style={{ color: MUTED, marginBottom: 30 }}>
-            Explore all upcoming Bollywood and Hollywood movies.
-          </p>
-
+          <p style={{ color: MUTED, marginBottom: 30 }}>Explore all upcoming Bollywood and Hollywood movies.</p>
           {searchBox("Search upcoming releases...")}
-
           {renderGrid(filteredUpcoming)}
         </main>
       )}
@@ -1197,8 +1217,7 @@ export default function Home({ onSelectItem }) {
             onClick={(e) => e.stopPropagation()}
             style={{
               position: "relative",
-              background:
-                "radial-gradient(circle at top right,rgba(90,103,158,0.35),transparent 42%),linear-gradient(145deg,#202D4A,#111A2E)",
+              background: "radial-gradient(circle at top right,rgba(90,103,158,0.35),transparent 42%),linear-gradient(145deg,#202D4A,#111A2E)",
               border: "1px solid rgba(232,200,121,0.4)",
               borderRadius: 24,
               padding: 32,
@@ -1217,43 +1236,18 @@ export default function Home({ onSelectItem }) {
                 setAuthMessage("");
               }}
               aria-label="Close"
-              style={{
-                position: "absolute",
-                top: 12,
-                right: 17,
-                background: "transparent",
-                color: "#D9DFF0",
-                border: "none",
-                fontSize: 28,
-                cursor: "pointer",
-              }}
+              style={{ position: "absolute", top: 12, right: 17, background: "transparent", color: "#D9DFF0", border: "none", fontSize: 28, cursor: "pointer" }}
             >
               ×
             </button>
 
-            <p
-              style={{
-                color: GOLD,
-                fontSize: 10,
-                letterSpacing: 2,
-                fontWeight: 800,
-              }}
-            >
+            <p style={{ color: GOLD, fontSize: 10, letterSpacing: 2, fontWeight: 800 }}>
               WELCOME TO YOUR CINEMATIC UNIVERSE
             </p>
-
             <h2 style={{ color: TEXT, fontSize: 29, margin: "10px 0" }}>
               {authMode === "login" ? "Welcome Back" : "Create Your Account"}
             </h2>
-
-            <p
-              style={{
-                color: MUTED,
-                lineHeight: 1.6,
-                fontSize: 13,
-                marginBottom: 22,
-              }}
-            >
+            <p style={{ color: MUTED, lineHeight: 1.6, fontSize: 13, marginBottom: 22 }}>
               {authMode === "login"
                 ? "Sign in to continue your AUREVIX experience."
                 : "Create your AUREVIX profile and make every movie night special."}
@@ -1262,25 +1256,18 @@ export default function Home({ onSelectItem }) {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-
                 const form = e.currentTarget;
                 const password = form.elements.password.value;
 
                 if (authMode === "register") {
                   const confirmPassword = form.elements.confirmPassword.value;
-
                   if (password !== confirmPassword) {
                     setAuthMessage("Passwords do not match. Please try again.");
                     return;
                   }
-
-                  setAuthMessage(
-                    "Your registration details are ready! Account creation will be connected later."
-                  );
+                  setAuthMessage("Your registration details are ready! Account creation will be connected later.");
                 } else {
-                  setAuthMessage(
-                    "Your login details are ready! Sign-in will be connected later."
-                  );
+                  setAuthMessage("Your login details are ready! Sign-in will be connected later.");
                 }
               }}
             >
@@ -1288,101 +1275,42 @@ export default function Home({ onSelectItem }) {
                 <>
                   <label style={labelStyle}>
                     Full Name
-
-                    <input
-                      type="text"
-                      name="fullName"
-                      placeholder="Enter your full name"
-                      autoComplete="name"
-                      required
-                      style={inputStyle}
-                    />
+                    <input type="text" name="fullName" placeholder="Enter your full name" autoComplete="name" required style={inputStyle} />
                   </label>
-
                   <label style={labelStyle}>
                     Phone Number
-
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder="Enter your phone number"
-                      autoComplete="tel"
-                      pattern="[0-9+() -]{8,20}"
-                      title="Please enter a valid phone number"
-                      required
-                      style={inputStyle}
-                    />
+                    <input type="tel" name="phone" placeholder="Enter your phone number" autoComplete="tel" pattern="[0-9+() -]{8,20}" title="Please enter a valid phone number" required style={inputStyle} />
                   </label>
                 </>
               )}
 
               <label style={labelStyle}>
                 Email Address
-
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Enter your email address"
-                  autoComplete="email"
-                  required
-                  style={inputStyle}
-                />
+                <input type="email" name="email" placeholder="Enter your email address" autoComplete="email" required style={inputStyle} />
               </label>
 
               <label style={labelStyle}>
                 Password
-
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
-                  placeholder={
-                    authMode === "login"
-                      ? "Enter your password"
-                      : "Create a password"
-                  }
-                  autoComplete={
-                    authMode === "login"
-                      ? "current-password"
-                      : "new-password"
-                  }
+                  placeholder={authMode === "login" ? "Enter your password" : "Create a password"}
+                  autoComplete={authMode === "login" ? "current-password" : "new-password"}
                   minLength="6"
                   required
                   style={inputStyle}
                 />
               </label>
 
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  color: MUTED,
-                  fontSize: 12,
-                  margin: "5px 0 14px",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={showPassword}
-                  onChange={(e) => setShowPassword(e.target.checked)}
-                />
+              <label style={{ display: "flex", alignItems: "center", gap: 8, color: MUTED, fontSize: 12, margin: "5px 0 14px", cursor: "pointer" }}>
+                <input type="checkbox" checked={showPassword} onChange={(e) => setShowPassword(e.target.checked)} />
                 Show password
               </label>
 
               {authMode === "register" && (
                 <label style={labelStyle}>
                   Confirm Password
-
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="confirmPassword"
-                    placeholder="Re-enter your password"
-                    autoComplete="new-password"
-                    minLength="6"
-                    required
-                    style={inputStyle}
-                  />
+                  <input type={showPassword ? "text" : "password"} name="confirmPassword" placeholder="Re-enter your password" autoComplete="new-password" minLength="6" required style={inputStyle} />
                 </label>
               )}
 
@@ -1394,15 +1322,9 @@ export default function Home({ onSelectItem }) {
                     borderRadius: 10,
                     fontSize: 12,
                     lineHeight: 1.5,
-                    color: authMessage.startsWith("Passwords")
-                      ? "#FFD9D9"
-                      : "#D9F5E4",
-                    background: authMessage.startsWith("Passwords")
-                      ? "rgba(190,65,65,0.16)"
-                      : "rgba(57,145,99,0.16)",
-                    border: authMessage.startsWith("Passwords")
-                      ? "1px solid rgba(240,120,120,0.3)"
-                      : "1px solid rgba(103,207,151,0.3)",
+                    color: authMessage.startsWith("Passwords") ? "#FFD9D9" : "#D9F5E4",
+                    background: authMessage.startsWith("Passwords") ? "rgba(190,65,65,0.16)" : "rgba(57,145,99,0.16)",
+                    border: authMessage.startsWith("Passwords") ? "1px solid rgba(240,120,120,0.3)" : "1px solid rgba(103,207,151,0.3)",
                   }}
                 >
                   {authMessage}
@@ -1411,62 +1333,24 @@ export default function Home({ onSelectItem }) {
 
               <button
                 type="submit"
-                style={{
-                  width: "100%",
-                  marginTop: 12,
-                  padding: 15,
-                  border: "none",
-                  borderRadius: 12,
-                  color: BLACK,
-                  fontWeight: 900,
-                  cursor: "pointer",
-                  background: "linear-gradient(110deg,#F4E4B6,#D9B65D)",
-                  fontSize: 14,
-                }}
+                style={{ width: "100%", marginTop: 12, padding: 15, border: "none", borderRadius: 12, color: BLACK, fontWeight: 900, cursor: "pointer", background: "linear-gradient(110deg,#F4E4B6,#D9B65D)", fontSize: 14 }}
               >
                 {authMode === "login" ? "Sign In" : "Create Account"}
               </button>
             </form>
 
-            <div
-              style={{
-                textAlign: "center",
-                color: MUTED,
-                fontSize: 12,
-                marginTop: 20,
-              }}
-            >
-              {authMode === "login"
-                ? "New to AUREVIX?"
-                : "Already have an account?"}
-
+            <div style={{ textAlign: "center", color: MUTED, fontSize: 12, marginTop: 20 }}>
+              {authMode === "login" ? "New to AUREVIX?" : "Already have an account?"}
               <button
                 type="button"
-                onClick={() => {
-                  openAuth(authMode === "login" ? "register" : "login");
-                }}
-                style={{
-                  color: GOLD,
-                  border: "none",
-                  background: "transparent",
-                  fontWeight: 800,
-                  cursor: "pointer",
-                  marginLeft: 5,
-                }}
+                onClick={() => openAuth(authMode === "login" ? "register" : "login")}
+                style={{ color: GOLD, border: "none", background: "transparent", fontWeight: 800, cursor: "pointer", marginLeft: 5 }}
               >
                 {authMode === "login" ? "Create account" : "Log in"}
               </button>
             </div>
 
-            <p
-              style={{
-                color: "#7886A6",
-                textAlign: "center",
-                fontSize: 9,
-                letterSpacing: 2,
-                marginTop: 25,
-              }}
-            >
+            <p style={{ color: "#7886A6", textAlign: "center", fontSize: 9, letterSpacing: 2, marginTop: 25 }}>
               AUREVIX • MOVIES • SERIES • EXPERIENCES
             </p>
           </div>
@@ -1477,48 +1361,21 @@ export default function Home({ onSelectItem }) {
       {selectedItem && !onSelectItem && (
         <div
           onClick={() => setSelectedItem(null)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 50,
-            background: "rgba(0,0,0,0.82)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 20,
-          }}
+          style={{ position: "fixed", inset: 0, zIndex: 50, background: "rgba(0,0,0,0.82)", display: "flex", justifyContent: "center", alignItems: "center", padding: 20 }}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "#1B2741",
-              border: `1px solid ${GOLD}`,
-              borderRadius: 18,
-              padding: 30,
-              maxWidth: 400,
-              width: "100%",
-              textAlign: "center",
-            }}
+            style={{ background: "#1B2741", border: `1px solid ${GOLD}`, borderRadius: 18, padding: 30, maxWidth: 400, width: "100%", textAlign: "center" }}
           >
             <h2 style={{ color: GOLD }}>{selectedItem.title}</h2>
-
             <p style={{ color: "#ccc" }}>
               {selectedItem.type === "Coming Soon"
                 ? "This title is coming soon!"
                 : "Booking functionality will be connected in the next step."}
             </p>
-
             <button
               onClick={() => setSelectedItem(null)}
-              style={{
-                background: GOLD,
-                border: "none",
-                padding: "10px 25px",
-                borderRadius: 8,
-                fontWeight: 800,
-                cursor: "pointer",
-                color: BLACK,
-              }}
+              style={{ background: GOLD, border: "none", padding: "10px 25px", borderRadius: 8, fontWeight: 800, cursor: "pointer", color: BLACK }}
             >
               Close
             </button>
@@ -1527,20 +1384,11 @@ export default function Home({ onSelectItem }) {
       )}
 
       {/* FOOTER */}
-      <footer
-        style={{
-          background: "#0B1222",
-          borderTop: "1px solid rgba(232,200,121,0.22)",
-          padding: "35px 6%",
-          textAlign: "center",
-        }}
-      >
+      <footer style={{ background: "#0B1222", borderTop: "1px solid rgba(232,200,121,0.22)", padding: "35px 6%", textAlign: "center" }}>
         <h2 style={{ color: GOLD, letterSpacing: 4 }}>AUREVIX.</h2>
-
         <p style={{ color: "#9AA5BD", fontSize: 13 }}>
           Your Cinematic Universe • Movies • TV Shows • Entertainment
         </p>
-
         <p style={{ color: "#7886A6", fontSize: 12 }}>
           © 2026 AUREVIX. All Rights Reserved.
         </p>

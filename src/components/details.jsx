@@ -6,7 +6,7 @@ const BACKGROUND = "#10182B";
 const TEXT = "#FFFFFF";
 const MUTED = "#E0E5EF";
 
-// Actor names ko compare karne ke liye
+// ACTOR NAME NORMALIZATION
 const normalizeName = (value = "") =>
   String(value)
     .normalize("NFD")
@@ -14,24 +14,191 @@ const normalizeName = (value = "") =>
     .toLowerCase()
     .replace(/[^a-z0-9]/g, "");
 
-// Actor photo cache - same actor ki photo baar-baar search nahi hogi
+// CAST FORMAT
+const makeCast = (entries) =>
+  entries.split(";").filter(Boolean).map((entry) => {
+    const [name, ...role] = entry.split("|");
+    return {
+      name: name.trim(),
+      character: role.join("|").trim() || "Role TBA",
+      image: "",
+    };
+  });
+
+// GUJARATI MOVIES CAST DATA
+const GUJARATI_CAST_DATA = {
+  "Hellaro": makeCast(
+    "Shraddha Dangar|Manjhri;Jayesh More|Mulji;Tejal Panchasara|Gomti;Shailesh Prajapati|Mukhi;Maulik Nayak|Bhaglo;Aarjav Trivedi|Arjan;Brinda Trivedi|Kesar;Kaushambi Bhatt|Champa;Niilam Paanchal|Supporting Role;Tarjanee Bhadla|Supporting Role"
+  ),
+
+  "Chaal Jeevi Laiye!": makeCast(
+    "Siddharth Randeria|Bipin Chandra Parikh;Yash Soni|Aditya;Aarohi Patel|Ketki Mehta;Aruna Irani|Dr. Vadia;Badrish Chhabra|Chai Shop Owner;Jagesh Mukati|Supporting Role;Ankit Panchal|Supporting Role"
+  ),
+
+  "Chhello Divas": makeCast(
+    "Yash Soni|Nikhil;Malhar Thakar|Vicky;Janki Bodiwala|Pooja;Mitra Gadhvi|Loy;Aarjav Trivedi|Dhulo;Kinjal Rajpriya|Nisha;Rahul Raval|Dev"
+  ),
+
+  "Bey Yaar": makeCast(
+    "Divyang Thakkar|Chintan;Pratik Gandhi|Tapan;Darshan Jariwala|Jeetu Bhatt;Manoj Joshi|Y.B. Gandhi;Aarti Patel|Supporting Role;Amit Mistry|Supporting Role;Kavin Dave|Supporting Role;Samvedna Suwalka|Supporting Role"
+  ),
+
+  "Reva": makeCast(
+    "Chetan Dhanani|Karan;Monal Gajjar|Supriya;Prashant Barot|Guptaji;Yatin Karyekar|Shashtriji;Muni Jha|Lawyer;Daya Shankar Pandey|Gandu Fakir;Abhinay Banker|Banga;Feroz Bhagat|Mehta Uncle;Rupa Borgaonkar|Puriya;Atul Mahale|Bittu"
+  ),
+
+  "Wrong Side Raju": makeCast(
+    "Pratik Gandhi|Raju Ambani;Kimberley Louisa McBeath|Shaily Asher;Asif Basra|Amitabh Shah;Kavi Shastri|Tanmay Shah;Maulik Chauhan|Dhama;Hetal Puniwala|Parth Parikh"
+  ),
+
+  "Kevi Rite Jaish": makeCast(
+    "Divyang Thakkar|Harish Patel;Veronica Kalpana Gautam|Aayushi Patel;Tom Alter|Uncle Sam;Rakesh Bedi|Daulatram Chainani;Rita Bhaduri|Old Lady;Anang Desai|Ishwarbhai Patel;Abhinay Banker|Raheel;Siddharth Amit Bhavsar|Kevin;Kenneth Desai|Bachubhai Patel;Tejal Panchasara|Bhavna Patel;Jay Upadhyay|Jignesh Patel"
+  ),
+
+  "The Good Road": makeCast(
+    "Shamji Dhana Kerasia|Pappu;Sonali Kulkarni|Kiran Shroff;Ajay Gehi|David Shroff;Keval Katrodia|Aditya;Poonam Kesar Singh|Poonam;Priyank Upadhyay|Shaukat;Rinkle Karelia|Rinkle"
+  ),
+
+  "Chal Man Jeetva Jaiye": makeCast(
+    "Karan Bhanushali|Abhishek;Krishna Bharadwaj|Dev Sanghvi;Hemen Chauhan|Viren Sanghvi;Dharmendra Gohil|Vasant Sanghvi;Rudrakshi Gupta|Raseela;Harsh Khurana|Niranjan Sanghvi;Anupama Masand|Guni Bhabhi;Rajeev Mehta|Suryakant Sanghvi;Sheetal Pandya|Supporting Role"
+  ),
+
+  "Love Ni Bhavai": makeCast(
+    "Malhar Thakar|Sagar;Pratik Gandhi|Aaditya;Aarohi Patel|Antara;Maulik Nayak|Mehul;Aarti Patel|Krishna;Ghanashyam Nayak|Tea Seller;Parth Desai|Chaddi"
+  ),
+
+  "Chhello Show": makeCast(
+    "Bhavin Rabari|Samay;Bhavesh Shrimali|Fazal;Richa Meena|Baa;Dipen Raval|Bapuji;Shoban Makwa|Badshah;Kishan Parmar|ST;Vijay Mer|Tiku;Rahul Koli|Manu;Vikas Bata|Nano;Tia Sebastien|Leela Mila"
+  ),
+
+  "Dhh": makeCast(
+    "Naseeruddin Shah|Magician;Kahaan|Gungun;Karan Patel|Kapil;Kuldeep Sodha|Bajrang;Brijendra Kala|Hindi Teacher;Krunal Pandit|Gungun's Father;Archan Trivedi|Dadaji;Sunil Vishrani|Maths Teacher;Mehr Mahajan|Magician's Assistant"
+  ),
+
+  "Shu Thayu?": makeCast(
+    "Malhar Thakar|Manan;Yash Soni|Neel;Aarjav Trivedi|Viral;Mitra Gadhvi|Chirag;Kinjal Rajpriya|Deepali;Jay Bhatt|Doctor;Mayur Chauhan|Supporting Role;Rahul Raval|Supporting Role"
+  ),
+
+  "Golkeri": makeCast(
+    "Malhar Thakar|Sahil Sutariya;Manasi Parekh|Harshita;Sachin Khedekar|Mohanbhai Sutariya;Vandana Pathak|Jyotsna Sutariya;Dharmesh Vyas|Jayesh;Pooja Soni|Sadhna;Ashish Kakkad|Tribhuvan"
+  ),
+
+  "Fakt Mahilao Maate": makeCast(
+    "Amitabh Bachchan|Chintan's Father;Yash Soni|Chintan;Deeksha Joshi|Sneha;Tarjanee Bhadla|Meghna;Pratik Nanda|Ravi;Bhavini Jani|Bhadra Madam;Kalpana Gagdekar|Sarla Parikh;Deep Vaidya|Supporting Role;Om Bhatt|Goggles;Dipika Raval|Jyoti"
+  ),
+
+  "Naadi Dosh": makeCast(
+    "Yash Soni|Kevin;Janki Bodiwala|Riddhi;Raunaq Kamdar|Kunal;Prashant Barot|Prashant;Ashish Kakkad|Kamlesh;Dipika Raval|Krupa;Kinnal Nayak|Sanjivani;Ravi Gohil|Nishit"
+  ),
+
+  "Vash": makeCast(
+    "Hiten Kumar|Pratap;Hitu Kanodia|Atharva;Janki Bodiwala|Aarya;Niilam Paanchal|Beena;Aaryan Sanghvi|Ansh"
+  ),
+
+  "Jhamkudi": makeCast(
+    "Manasi Parekh|Kumud;Viraj Ghelani|Bablo;Sanjay Goradia|Babu Kaka;Ojas Rawal|Ghelchandra;Krunal Pandit|Mansukh Dholkia;Chetan Daiya|Inspector Okyo;Jayesh More|Kalicharan;Bhavini Jani|Veena Waghela;Nisarg Trivedi|Vishwajeet"
+  ),
+
+  "Kasoombo": makeCast(
+    "Dharmendra Gohil|Dadu Barot;Raunaq Kamdar|Amar;Shraddha Dangar|Sujan;Darshan Pandya|Allauddin Khilji;Monal Gajjar|Roshan;Chetan Dhanani|Arjun;Firoz Irani|Visabha"
+  ),
+
+  "Fakt Purusho Maate": makeCast(
+    "Yash Soni|Brijesh;Mitra Gadhvi|Kirtan;Esha Kansara|Radhika;Darshan Jariwala|Purshottam Lal;Amitabh Bachchan|Prabhudaas;Aarti Patel|Leela Foi;Hetal Modi|Aruna Ben;Prem Gadhavi|Tantrik Baba;Kamal Joshi|Supporting Role;Jitendra Thakkar|Narrotam Bhai;Pralay Rawal|Sarvottam Bhai;Anurag Prapanna|Uttam Bhai"
+  ),
+
+  "Laalo - Krishna Sada Sahaayate": makeCast(
+    "Reeva Rachh|Role TBA;Shruhad Goswami|Role TBA;Karan Joshi|Role TBA;Akash Pandya|Special Appearance;Maulik Chauhan|Special Appearance"
+  ),
+
+  "Pravas": makeCast(
+    "Vishal Thakkar|Role TBA;Jay Pandya|Role TBA;Komal Panchal|Role TBA;Nishma Soni|Role TBA;Pranshu Shah|Role TBA;Harsh Shah|Role TBA;Nayan Chatrariya|Role TBA;Manisha Narkar|Role TBA;Vijay Solanki|Role TBA;Sahil Patel|Role TBA"
+  ),
+
+  "Umbarro": makeCast(
+    "Vandana Pathak|Role TBA;Kaajal Oza Vaidya|Role TBA;Suchita Trivedi|Role TBA;Deeksha Joshi|Role TBA;Tarjanee Bhadla|Role TBA;Tejal Panchasara|Role TBA;Vineeta M Joshee|Role TBA;Aarjav Trivedi|Role TBA;Sanjay Galsar|Role TBA"
+  ),
+
+  "Chaniya Toli": makeCast(
+    "Yash Soni|Prakash Mistry;Ragi Jani|Peshawar;Netri Trivedi|Naina;Heena Varde|Role TBA;Chetan Daiya|MLA;Maulik Nayak|Reporter;Vaishakh Rathodd|Role TBA;Jay Bhatt|PI Zala;Nikita Sharma|Sheetal;Sohni Bhatt|Modasa;Janki Bodiwala|Special Appearance"
+  ),
+
+  "Misri": makeCast(
+    "Raunaq Kamdar|Role TBA;Manasi Parekh|Role TBA;Tiku Talsania|Role TBA;Hitu Kanodia|Role TBA;Archan Trivedi|Role TBA;Beena Shah|Role TBA;Sonali Desai|Role TBA;Sunil Vishrani|Role TBA;Morli Patel|Role TBA;Sandip Prajapat|Role TBA;Prem Gadhavi|Role TBA;Kaushambi Bhatt|Role TBA"
+  ),
+
+  "Dusshera": makeCast(
+    "Kartik J|Role TBA;Jagdish Italiya|Role TBA;Pauravi Joshi|Role TBA;Unnati Sirsath|Role TBA;Sundaram Prasad|Role TBA;Jitendra Sumra|Role TBA;Yug Italiya|Role TBA;Priti Patel|Role TBA;Hiren Vaidya|Role TBA;Pruthvi Palkar|Role TBA;Aman Savle|Role TBA;Lokesh Swami|Role TBA"
+  ),
+
+  "Mara Pappa Superhero": makeCast(
+    "Shraddha Dangar|Tejudi;Abhinay Banker|Bhavlo;Revanta Sarabhai|Yash;Priyanka Raja|Devika;Bhavya Sirohi|Kanku;Bhatt Bhushan|Jamburo"
+  ),
+
+  "Raado": makeCast(
+    "Hiten Kumar|Kamlesh CM;Yash Soni|Karan;Hitu Kanodia|Bhushan;Pratik Nanda|Tushar;Nikita Sharma|Madhvi;Bharat Chawda|Darshan;Tarjanee Bhadla|Aashi;Kuldip Shukla|Dr. Rahul;Garima Bhardwaj|Avni;Mehool Desai|Vinod"
+  ),
+
+  "Aum Mangalam Singlem": makeCast(
+    "Malhar Thakar|Siddharth;Aarohi Patel|Vaani;Bhamini Oza|Ishita;Tatsat Munshi|Max;Darshan Jariwala|Vaani's Father;Devanshi Joshi|Role TBA;Nisarg Trivedi|Role TBA"
+  ),
+
+  "Gandhi & Co.": makeCast(
+    "Reyaan Shah|Mintu;Hiranya Zinzuwadia|Mitra;Darshan Jariwala|Bharatbhai;Jayesh More|Parth;Dhruma Mehta|Mintu's Mother;Dhyani Jani|Role TBA"
+  ),
+};
+
+// FIND GUJARATI CAST BY MOVIE TITLE
+function getGujaratiCast(title = "") {
+  const normalizedTitle = normalizeName(title);
+
+  const matchedTitle = Object.keys(GUJARATI_CAST_DATA).find(
+    (movieTitle) =>
+      normalizeName(movieTitle) === normalizedTitle
+  );
+
+  return matchedTitle
+    ? GUJARATI_CAST_DATA[matchedTitle]
+    : [];
+}
+
+// ACTOR PHOTO CACHE
 const actorPhotoCache = new Map();
 
-// Wikipedia article se actor ki photo
+// WIKIPEDIA ACTOR PHOTO
 async function fetchWikipediaActorPhoto(actorName) {
   const name = actorName.trim();
 
   if (!name) return "";
 
   try {
+    // First try the actor's exact Wikipedia page
+    const directUrl =
+      "https://en.wikipedia.org/api/rest_v1/page/summary/" +
+      encodeURIComponent(name.replace(/ /g, "_"));
+
+    const directResponse = await fetch(directUrl);
+
+    if (directResponse.ok) {
+      const directData = await directResponse.json();
+
+      const directImage =
+        directData.originalimage?.source ||
+        directData.thumbnail?.source ||
+        "";
+
+      if (directImage) return directImage;
+    }
+
+    // Search Wikipedia if exact page was not found
     const searchUrl =
       "https://en.wikipedia.org/w/api.php?" +
       new URLSearchParams({
         action: "query",
         list: "search",
-        srsearch: name,
+        srsearch: `"${name}" actor`,
         srnamespace: "0",
-        srlimit: "8",
+        srlimit: "10",
         format: "json",
         origin: "*",
       }).toString();
@@ -43,26 +210,14 @@ async function fetchWikipediaActorPhoto(actorName) {
     const data = await response.json();
     const results = data.query?.search || [];
 
-    if (!results.length) return "";
+    const normalizedActor = normalizeName(name);
 
-    const exactMatch = results.find(
+    const selectedPage = results.find(
       (page) =>
-        normalizeName(page.title) === normalizeName(name)
+        normalizeName(page.title) === normalizedActor
     );
 
-    const actorMatch = results.find((page) => {
-      const title = normalizeName(page.title);
-      const actor = normalizeName(name);
-
-      return (
-        title === actor ||
-        title.startsWith(actor) ||
-        title.includes(actor)
-      );
-    });
-
-    const selectedPage =
-      exactMatch || actorMatch || results[0];
+    if (!selectedPage) return "";
 
     const imageUrl =
       "https://en.wikipedia.org/w/api.php?" +
@@ -86,20 +241,18 @@ async function fetchWikipediaActorPhoto(actorName) {
       imageData.query?.pages || {}
     );
 
-    const page = pages[0];
-
     return (
-      page?.original?.source ||
-      page?.thumbnail?.source ||
+      pages[0]?.original?.source ||
+      pages[0]?.thumbnail?.source ||
       ""
     );
   } catch (error) {
-    console.log("Wikipedia actor photo error:", name, error);
+    console.log("Wikipedia photo error:", name, error);
     return "";
   }
 }
 
-// Wikimedia Commons par actor ki photo search
+// WIKIMEDIA COMMONS ACTOR PHOTO
 async function fetchCommonsActorPhoto(actorName) {
   const name = actorName.trim();
 
@@ -107,7 +260,8 @@ async function fetchCommonsActorPhoto(actorName) {
 
   try {
     const searchTerms = [
-      `${name} actor portrait`,
+      `"${name}"`,
+      `${name} portrait`,
       `${name} actor`,
     ];
 
@@ -119,7 +273,7 @@ async function fetchCommonsActorPhoto(actorName) {
           generator: "search",
           gsrsearch: searchTerm,
           gsrnamespace: "6",
-          gsrlimit: "8",
+          gsrlimit: "15",
           prop: "imageinfo",
           iiprop: "url",
           iiurlwidth: "600",
@@ -137,24 +291,19 @@ async function fetchCommonsActorPhoto(actorName) {
         data.query?.pages || {}
       );
 
-      if (!pages.length) continue;
-
       const normalizedActor = normalizeName(name);
 
-      // Actor name se match karti file ko priority
       const matchingPage = pages.find((page) => {
         const fileName = normalizeName(page.title);
 
         return fileName.includes(normalizedActor);
       });
 
-      const selectedPage = matchingPage || pages[0];
-
-      const imageInfo = selectedPage.imageinfo?.[0];
+      if (!matchingPage) continue;
 
       const photo =
-        imageInfo?.thumburl ||
-        imageInfo?.url ||
+        matchingPage.imageinfo?.[0]?.thumburl ||
+        matchingPage.imageinfo?.[0]?.url ||
         "";
 
       if (photo) return photo;
@@ -162,12 +311,12 @@ async function fetchCommonsActorPhoto(actorName) {
 
     return "";
   } catch (error) {
-    console.log("Commons actor photo error:", name, error);
+    console.log("Commons photo error:", name, error);
     return "";
   }
 }
 
-// Wikipedia aur Commons dono par photo search
+// GET ACTOR PHOTO
 async function fetchActorPhoto(actorName) {
   const name = actorName.trim();
 
@@ -180,10 +329,8 @@ async function fetchActorPhoto(actorName) {
   }
 
   try {
-    // First priority: Wikipedia actor article
     let photo = await fetchWikipediaActorPhoto(name);
 
-    // Second priority: Wikimedia Commons
     if (!photo) {
       photo = await fetchCommonsActorPhoto(name);
     }
@@ -193,31 +340,26 @@ async function fetchActorPhoto(actorName) {
     return photo || "";
   } catch (error) {
     console.log("Actor photo loading failed:", name, error);
-
     actorPhotoCache.set(cacheKey, "");
-
     return "";
   }
 }
 
-// Cast data ko ek format mein convert karna
+// FORMAT CAST DATA
 function formatCastData(castData) {
   if (typeof castData === "string") {
-    castData = castData
-      .split(";")
-      .map((entry) => {
-        const parts = entry.split("|");
+    castData = castData.split(";").map((entry) => {
+      const parts = entry.split("|");
 
-        return {
-          name: parts[0]?.trim() || "",
-          character: parts.slice(1).join("|").trim() || "Role TBA",
-        };
-      });
+      return {
+        name: parts[0]?.trim() || "",
+        character:
+          parts.slice(1).join("|").trim() || "Role TBA",
+      };
+    });
   }
 
-  if (!Array.isArray(castData)) {
-    return [];
-  }
+  if (!Array.isArray(castData)) return [];
 
   return castData
     .map((actor) => {
@@ -253,7 +395,7 @@ function formatCastData(castData) {
     .filter((actor) => actor.name);
 }
 
-// Photo requests ko limited rakhta hai
+// LOAD PHOTOS WITH MAXIMUM 3 REQUESTS AT A TIME
 async function loadActorPhotos(actorList, isCancelled) {
   const results = [...actorList];
 
@@ -281,7 +423,6 @@ async function loadActorPhotos(actorList, isCancelled) {
     }
   }
 
-  // Ek samay par maximum 3 actor photos search hongi
   const workers = Array.from(
     { length: Math.min(3, results.length) },
     () => worker()
@@ -292,17 +433,15 @@ async function loadActorPhotos(actorList, isCancelled) {
   return results;
 }
 
+// DETAILS PAGE
 export default function Details({
   item,
   onBack,
   onBookNow,
 }) {
-  const [image, setImage] = useState(
-    item?.poster || item?.image || item?.thumbnail || ""
-  );
-
+  const [image, setImage] = useState("");
   const [description, setDescription] = useState(
-    item?.description || "Discover the story behind this title."
+    "Discover the story behind this title."
   );
 
   const [loading, setLoading] = useState(true);
@@ -310,7 +449,7 @@ export default function Details({
   const [actors, setActors] = useState([]);
   const [actorsLoading, setActorsLoading] = useState(false);
 
-  // LOAD MOVIE DETAILS
+  // RESET AND LOAD MOVIE DETAILS
   useEffect(() => {
     let cancelled = false;
 
@@ -321,11 +460,15 @@ export default function Details({
       }
 
       setImage(
-        item.poster || item.image || item.thumbnail || ""
+        item.poster ||
+        item.image ||
+        item.thumbnail ||
+        ""
       );
 
       setDescription(
-        item.description || "Discover the story behind this title."
+        item.description ||
+        "Discover the story behind this title."
       );
 
       setLoading(true);
@@ -352,12 +495,18 @@ export default function Details({
 
         if (cancelled) return;
 
-        if (data.originalimage?.source) {
+        // Keep the poster supplied by Home.jsx.
+        // Use Wikipedia image only if no poster exists.
+        if (
+          !item.poster &&
+          !item.image &&
+          data.originalimage?.source
+        ) {
           setImage(data.originalimage.source);
         } else if (
-          data.thumbnail?.source &&
           !item.poster &&
-          !item.image
+          !item.image &&
+          data.thumbnail?.source
         ) {
           setImage(data.thumbnail.source);
         }
@@ -395,18 +544,27 @@ export default function Details({
       setActors([]);
       setActorsLoading(true);
 
-      const castData =
+      // First use cast received from Home.jsx.
+      const receivedCast =
         item.castDetails ||
         item.cast ||
         item.actors ||
         item.starring ||
         [];
 
-      const formattedActors = formatCastData(castData);
+      // If Home has no Gujarati cast, use local Gujarati cast data.
+      const localGujaratiCast = getGujaratiCast(item.title);
+
+      const selectedCast =
+        Array.isArray(receivedCast) && receivedCast.length > 0
+          ? receivedCast
+          : localGujaratiCast;
+
+      const formattedActors = formatCastData(selectedCast);
 
       if (cancelled) return;
 
-      // Names aur character names pehle hi show honge
+      // Show actor names and characters immediately.
       setActors(formattedActors);
 
       if (!formattedActors.length) {
@@ -472,7 +630,7 @@ export default function Details({
     );
   }
 
-  const category = item.type || item.category || "Movie";
+  const category = item.category || item.type || "Movie";
 
   const buttonStyle = {
     padding: "13px 25px",
@@ -743,7 +901,7 @@ export default function Details({
                     alignItems: "center",
                   }}
                 >
-                  {/* CIRCULAR ACTOR PHOTO */}
+                  {/* ACTOR PROFILE PHOTO */}
                   <div
                     style={{
                       width: 112,
