@@ -6,6 +6,210 @@ const BLACK = "#10182B";
 const TEXT = "#F7F3E9";
 const MUTED = "#B9C2D7";
 
+// CAST DATA
+// Format: Actor Name | Character Name
+const makeCast = (entries) =>
+  entries.split(";").filter(Boolean).map((entry) => {
+    const [name, character] = entry.split("|");
+    return {
+      name: name.trim(),
+      character: character.trim(),
+      image: "",
+    };
+  });
+
+const CAST_DATA = {
+  // BOLLYWOOD
+  "Jawan": makeCast(
+    "Shah Rukh Khan|Azad Rathore / Vikram Rathore;Nayanthara|Narmada;Vijay Sethupathi|Kalee;Deepika Padukone|Aishwarya"
+  ),
+  "Pathaan": makeCast(
+    "Shah Rukh Khan|Pathaan;Deepika Padukone|Rubina;John Abraham|Jim;Dimple Kapadia|Nandini"
+  ),
+  "Animal": makeCast(
+    "Ranbir Kapoor|Ranvijay Singh;Rashmika Mandanna|Geetanjali;Anil Kapoor|Balbir Singh;Bobby Deol|Abrar Haque"
+  ),
+  "Dangal": makeCast(
+    "Aamir Khan|Mahavir Singh Phogat;Sakshi Tanwar|Daya Kaur;Fatima Sana Shaikh|Geeta Phogat;Sanya Malhotra|Babita Kumari"
+  ),
+  "3 Idiots": makeCast(
+    "Aamir Khan|Rancho;R. Madhavan|Farhan;Sharman Joshi|Raju;Kareena Kapoor|Pia"
+  ),
+  "KGF Chapter 2": makeCast(
+    "Yash|Rocky;Sanjay Dutt|Adheera;Srinidhi Shetty|Reena;Raveena Tandon|Ramika Sen"
+  ),
+  "Brahmastra": makeCast(
+    "Ranbir Kapoor|Shiva;Alia Bhatt|Isha;Amitabh Bachchan|Guru;Mouni Roy|Junoon"
+  ),
+  "War": makeCast(
+    "Hrithik Roshan|Kabir;Tiger Shroff|Khalid;Vaani Kapoor|Naina"
+  ),
+  "Tiger 3": makeCast(
+    "Salman Khan|Avinash Tiger Singh Rathore;Katrina Kaif|Zoya;Emraan Hashmi|Aatish"
+  ),
+  "Bajrangi Bhaijaan": makeCast(
+    "Salman Khan|Pawan Kumar Chaturvedi;Harshaali Malhotra|Munni;Kareena Kapoor|Rasika;Nawazuddin Siddiqui|Chand Nawab"
+  ),
+  "Pushpa": makeCast(
+    "Allu Arjun|Pushpa Raj;Rashmika Mandanna|Srivalli;Fahadh Faasil|Bhanwar Singh Shekhawat"
+  ),
+  "RRR": makeCast(
+    "Ram Charan|Alluri Sitarama Raju;N. T. Rama Rao Jr.|Komaram Bheem;Alia Bhatt|Sita;Ajay Devgn|Venkata Rama Raju"
+  ),
+  "Sultan": makeCast(
+    "Salman Khan|Sultan Ali Khan;Anushka Sharma|Aarfa;Randeep Hooda|Fateh Singh"
+  ),
+  "Drishyam 2": makeCast(
+    "Ajay Devgn|Vijay Salgaonkar;Akshaye Khanna|Tarun Ahlawat;Tabu|Meera Deshmukh;Shriya Saran|Nandini Salgaonkar"
+  ),
+  "Kantara": makeCast(
+    "Rishab Shetty|Shiva;Sapthami Gowda|Leela;Kishore|Murali"
+  ),
+  "Chhaava": makeCast(
+    "Vicky Kaushal|Chhatrapati Sambhaji Maharaj;Rashmika Mandanna|Yesubai;Akshaye Khanna|Aurangzeb"
+  ),
+  "Stree 2": makeCast(
+    "Rajkummar Rao|Vicky;Shraddha Kapoor|Stree;Aparshakti Khurana|Bittu;Pankaj Tripathi|Rudra"
+  ),
+  "Fighter": makeCast(
+    "Hrithik Roshan|Shamsher Pathania;Deepika Padukone|Minal Rathore;Anil Kapoor|Rakesh Jai Singh"
+  ),
+  "Shershaah": makeCast(
+    "Sidharth Malhotra|Captain Vikram Batra;Kiara Advani|Dimple Cheema"
+  ),
+  "Laapataa Ladies": makeCast(
+    "Nitanshi Goel|Phool Kumari;Pratibha Ranta|Jaya;Sparsh Shrivastava|Deepak;Ravi Kishan|Shyam Manohar"
+  ),
+
+  // HOLLYWOOD
+  "Oppenheimer": makeCast(
+    "Cillian Murphy|J. Robert Oppenheimer;Emily Blunt|Katherine Oppenheimer;Matt Damon|Leslie Groves;Robert Downey Jr.|Lewis Strauss"
+  ),
+  "Barbie": makeCast(
+    "Margot Robbie|Barbie;Ryan Gosling|Ken;America Ferrera|Gloria;Simu Liu|Ken"
+  ),
+  "Dune: Part Two": makeCast(
+    "Timothée Chalamet|Paul Atreides;Zendaya|Chani;Rebecca Ferguson|Lady Jessica;Austin Butler|Feyd-Rautha"
+  ),
+  "Avatar: The Way of Water": makeCast(
+    "Sam Worthington|Jake Sully;Zoe Saldaña|Neytiri;Sigourney Weaver|Kiri;Stephen Lang|Miles Quaritch"
+  ),
+  "Avengers: Endgame": makeCast(
+    "Robert Downey Jr.|Tony Stark;Chris Evans|Steve Rogers;Scarlett Johansson|Natasha Romanoff;Chris Hemsworth|Thor"
+  ),
+  "Titanic": makeCast(
+    "Leonardo DiCaprio|Jack Dawson;Kate Winslet|Rose DeWitt Bukater;Billy Zane|Cal Hockley"
+  ),
+  "The Batman": makeCast(
+    "Robert Pattinson|Bruce Wayne;Zoë Kravitz|Selina Kyle;Paul Dano|Edward Nashton;Colin Farrell|Oswald Cobblepot"
+  ),
+  "Joker": makeCast(
+    "Joaquin Phoenix|Arthur Fleck;Zazie Beetz|Sophie Dumond;Robert De Niro|Murray Franklin"
+  ),
+  "Interstellar": makeCast(
+    "Matthew McConaughey|Cooper;Anne Hathaway|Dr. Amelia Brand;Jessica Chastain|Murph;Michael Caine|Professor Brand"
+  ),
+  "Inception": makeCast(
+    "Leonardo DiCaprio|Dom Cobb;Joseph Gordon-Levitt|Arthur;Elliot Page|Ariadne;Tom Hardy|Eames"
+  ),
+  "Spider-Man: No Way Home": makeCast(
+    "Tom Holland|Peter Parker;Zendaya|MJ;Benedict Cumberbatch|Doctor Strange;Jacob Batalon|Ned Leeds"
+  ),
+  "The Dark Knight": makeCast(
+    "Christian Bale|Bruce Wayne;Heath Ledger|Joker;Aaron Eckhart|Harvey Dent;Michael Caine|Alfred"
+  ),
+  "Frozen": makeCast(
+    "Kristen Bell|Anna;Idina Menzel|Elsa;Jonathan Groff|Kristoff;Josh Gad|Olaf"
+  ),
+  "Black Panther": makeCast(
+    "Chadwick Boseman|T'Challa;Michael B. Jordan|Erik Killmonger;Lupita Nyong'o|Nakia;Danai Gurira|Okoye"
+  ),
+  "Doctor Strange": makeCast(
+    "Benedict Cumberbatch|Stephen Strange;Chiwetel Ejiofor|Mordo;Rachel McAdams|Christine Palmer;Tilda Swinton|Ancient One"
+  ),
+  "The Conjuring": makeCast(
+    "Vera Farmiga|Lorraine Warren;Patrick Wilson|Ed Warren;Lili Taylor|Carolyn Perron;Ron Livingston|Roger Perron"
+  ),
+  "Mission Impossible": makeCast(
+    "Tom Cruise|Ethan Hunt;Hayley Atwell|Grace;Ving Rhames|Luther Stickell;Simon Pegg|Benji Dunn"
+  ),
+  "Jurassic World": makeCast(
+    "Chris Pratt|Owen Grady;Bryce Dallas Howard|Claire Dearing;Vincent D'Onofrio|Vic Hoskins"
+  ),
+  "John Wick 4": makeCast(
+    "Keanu Reeves|John Wick;Donnie Yen|Caine;Bill Skarsgård|Marquis Vincent de Gramont;Laurence Fishburne|Bowery King"
+  ),
+  "The Lion King": makeCast(
+    "Donald Glover|Simba;Beyoncé|Nala;James Earl Jones|Mufasa;Chiwetel Ejiofor|Scar"
+  ),
+
+  // TRENDING / UPCOMING BOLLYWOOD
+  "King": makeCast(
+    "Shah Rukh Khan|Role TBA;Suhana Khan|Role TBA;Deepika Padukone|Role TBA;Abhishek Bachchan|Role TBA;Anil Kapoor|Role TBA"
+  ),
+
+  "Golmaal 5": [],
+
+  "Tumbbad II": makeCast(
+    "Sohum Shah|Role TBA;Nawazuddin Siddiqui|Role TBA;Alia Bhatt|Role TBA"
+  ),
+
+  "Shakti Shalini": makeCast(
+    "Aneet Padda|Role TBA"
+  ),
+
+  "Dada - The Sourav Ganguli Story": [],
+
+  // TRENDING / UPCOMING HOLLYWOOD
+  "Avengers: Doomsday": makeCast(
+    "Robert Downey Jr.|Victor von Doom;Chris Evans|Steve Rogers;Chris Hemsworth|Thor;Pedro Pascal|Reed Richards;Paul Rudd|Scott Lang;Anthony Mackie|Sam Wilson;Florence Pugh|Yelena Belova;Vanessa Kirby|Sue Storm;Ebon Moss-Bachrach|Ben Grimm;Wyatt Russell|John Walker;Channing Tatum|Gambit;Simu Liu|Shang-Chi;Ian McKellen|Magneto;Tom Hiddleston|Loki;James Marsden|Cyclops;Patrick Stewart|Professor X;Joseph Quinn|Johnny Storm;Sebastian Stan|Bucky Barnes;David Harbour|Red Guardian;Letitia Wright|Shuri;Lewis Pullman|Sentry;Kelsey Grammer|Beast;Kathryn Newton|Cassie Lang;Danny Ramirez|Joaquin Torres;Winston Duke|M'Baku;Alan Cumming|Nightcrawler;Hannah John-Kamen|Ghost;Rebecca Romijn|Mystique;Mabel Cadena|Namora;Tenoch Huerta|Namor"
+  ),
+
+  "Jumanji: Open World": makeCast(
+    "Dwayne Johnson|Dr. Smolder Bravestone;Jack Black|Professor Sheldon Oberon;Kevin Hart|Franklin Finbar;Karen Gillan|Ruby Roundhouse;Alex Wolff|Role TBA;Morgan Turner|Role TBA;Ser'Darius Blain|Role TBA;Madison Iseman|Role TBA;Nick Jonas|Role TBA;Danny DeVito|Role TBA"
+  ),
+
+  "Spider-Man: Brand New Day": makeCast(
+    "Tom Holland|Peter Parker;Zendaya|MJ;Sadie Sink|Role TBA;Jacob Batalon|Ned Leeds;Jon Bernthal|Frank Castle;Florence Pugh|Yelena Belova;Tramell Tillman|Role TBA;Michael Mando|Mac Gargan;Rosario Dawson|Role TBA;Mark Ruffalo|Bruce Banner"
+  ),
+
+  "Avengers: Secret Wars": [],
+
+  "The Man with the Bag": [],
+  
+  // TV SHOWS
+  "Stranger Things": makeCast(
+    "Millie Bobby Brown|Eleven;Finn Wolfhard|Mike Wheeler;David Harbour|Jim Hopper;Winona Ryder|Joyce Byers"
+  ),
+  "Money Heist": makeCast(
+    "Úrsula Corberó|Tokyo;Álvaro Morte|The Professor;Pedro Alonso|Berlin;Itziar Ituño|Raquel Murillo"
+  ),
+  "Wednesday": makeCast(
+    "Jenna Ortega|Wednesday Addams;Emma Myers|Enid Sinclair;Catherine Zeta-Jones|Morticia Addams;Luis Guzmán|Gomez Addams"
+  ),
+  "The Witcher": makeCast(
+    "Henry Cavill|Geralt of Rivia;Anya Chalotra|Yennefer;Freya Allan|Ciri"
+  ),
+  "Game of Thrones": makeCast(
+    "Emilia Clarke|Daenerys Targaryen;Kit Harington|Jon Snow;Peter Dinklage|Tyrion Lannister;Sophie Turner|Sansa Stark"
+  ),
+  "Dark": makeCast(
+    "Louis Hofmann|Jonas Kahnwald;Lisa Vicari|Martha Nielsen;Andreas Pietschmann|The Stranger"
+  ),
+  "Breaking Bad": makeCast(
+    "Bryan Cranston|Walter White;Aaron Paul|Jesse Pinkman;Anna Gunn|Skyler White;Dean Norris|Hank Schrader"
+  ),
+  "The Last of Us": makeCast(
+    "Pedro Pascal|Joel Miller;Bella Ramsey|Ellie Williams;Anna Torv|Tess"
+  ),
+  "Squid Game": makeCast(
+    "Lee Jung-jae|Seong Gi-hun;Park Hae-soo|Cho Sang-woo;Jung Ho-yeon|Kang Sae-byeok"
+  ),
+  "The Family Man": makeCast(
+    "Manoj Bajpayee|Srikant Tiwari;Priyamani|Suchitra Tiwari;Sharib Hashmi|JK Talpade;Ashlesha Thakur|Dhriti Tiwari"
+  ),
+};
+
 const movies = [
   // Bollywood - 20
   { title: "Jawan", wiki: "Jawan (film)", category: "Bollywood", year: 2023 },
@@ -480,11 +684,26 @@ export default function Home({ onSelectItem }) {
     gap: 20,
   };
 
+  // Selected movie/show ke saath cast details bhi bhejo.
   const selectItem = (item) => {
+    const matchedCastKey = Object.keys(CAST_DATA).find(
+      (title) =>
+        normalizeTitle(title) === normalizeTitle(item.title)
+    );
+
+    const selectedWithCast = {
+      ...item,
+      castDetails:
+        CAST_DATA[item.title] ||
+        CAST_DATA[matchedCastKey] ||
+        item.castDetails ||
+        [],
+    };
+
     if (onSelectItem) {
-      onSelectItem(item);
+      onSelectItem(selectedWithCast);
     } else {
-      setSelectedItem(item);
+      setSelectedItem(selectedWithCast);
     }
   };
 

@@ -1,3 +1,4 @@
+
 import React from "react";
 
 const GOLD = "#E8C879";
@@ -56,6 +57,33 @@ function Confirmation({ booking, bookingId, onHome, onViewTicket }) {
           textAlign: "center",
         }}
       >
+
+        {/* AUREVIX LOGO */}
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            paddingBottom: "18px",
+            marginBottom: "25px",
+            borderBottom: "1px solid rgba(232,200,121,0.2)",
+          }}
+        >
+          <h2
+            style={{
+              color: GOLD,
+              letterSpacing: "4px",
+              fontSize: "25px",
+              fontWeight: 800,
+              margin: 0,
+              textShadow: "0 0 15px rgba(232,200,121,0.2)",
+            }}
+          >
+            AUREVIX
+          </h2>
+        </div>
+
         <div
           style={{
             width: "85px",
