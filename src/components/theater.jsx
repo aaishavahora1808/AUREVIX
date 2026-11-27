@@ -74,12 +74,19 @@ export default function Theater({
     <div style={styles.page}>
       <div style={styles.container}>
 
-        <button
-          onClick={onBack}
-          style={styles.backButton}
-        >
-          ← Back
-        </button>
+        {/* AUREVIX LOGO AND BACK BUTTON */}
+        <div style={styles.topBar}>
+          <h2 style={styles.logo}>
+            AUREVIX
+          </h2>
+
+          <button
+            onClick={onBack}
+            style={styles.backButton}
+          >
+            ← Back
+          </button>
+        </div>
 
         <div style={styles.header}>
           <div style={styles.eyebrow}>
@@ -195,6 +202,25 @@ const styles = {
     margin: "0 auto",
   },
 
+  // AUREVIX TOP NAVIGATION
+  topBar: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 15,
+    paddingBottom: 18,
+    borderBottom: "1px solid rgba(232,200,121,0.2)",
+  },
+
+  logo: {
+    color: GOLD,
+    letterSpacing: 4,
+    fontSize: 25,
+    fontWeight: 800,
+    margin: 0,
+    textShadow: "0 0 15px rgba(232,200,121,0.2)",
+  },
+
   backButton: {
     background: "transparent",
     border: `1px solid ${GOLD}`,
@@ -218,6 +244,7 @@ const styles = {
   },
 
   heading: {
+    color: GOLD,
     fontSize: "clamp(30px, 5vw, 46px)",
     margin: "12px 0 8px",
   },

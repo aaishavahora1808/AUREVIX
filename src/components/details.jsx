@@ -3,10 +3,300 @@ import React, { useEffect, useState } from "react";
 
 const GOLD = "#E8C879";
 const BACKGROUND = "#10182B";
-const TEXT = "#F5F2E9";
-const MUTED = "#B7C0D3";
+const TEXT = "#FFFFFF";
+const MUTED = "#E0E5EF";
 
-export default function Details({ item, onBack, onBookNow }) {
+// Actor names ko compare karne ke liye
+const normalizeName = (value = "") =>
+  String(value)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+
+// Actor photo cache - same actor ki photo baar-baar search nahi hogi
+const actorPhotoCache = new Map();
+
+// Wikipedia article se actor ki photo
+async function fetchWikipediaActorPhoto(actorName) {
+  const name = actorName.trim();
+
+  if (!name) return "";
+
+  try {
+    const searchUrl =
+      "https://en.wikipedia.org/w/api.php?" +
+      new URLSearchParams({
+        action: "query",
+        list: "search",
+        srsearch: name,
+        srnamespace: "0",
+        srlimit: "8",
+        format: "json",
+        origin: "*",
+      }).toString();
+
+    const response = await fetch(searchUrl);
+
+    if (!response.ok) return "";
+
+    const data = await response.json();
+    const results = data.query?.search || [];
+
+    if (!results.length) return "";
+
+    const exactMatch = results.find(
+      (page) =>
+        normalizeName(page.title) === normalizeName(name)
+    );
+
+    const actorMatch = results.find((page) => {
+      const title = normalizeName(page.title);
+      const actor = normalizeName(name);
+
+      return (
+        title === actor ||
+        title.startsWith(actor) ||
+        title.includes(actor)
+      );
+    });
+
+    const selectedPage =
+      exactMatch || actorMatch || results[0];
+
+    const imageUrl =
+      "https://en.wikipedia.org/w/api.php?" +
+      new URLSearchParams({
+        action: "query",
+        prop: "pageimages",
+        titles: selectedPage.title,
+        piprop: "thumbnail|original",
+        pithumbsize: "600",
+        format: "json",
+        origin: "*",
+      }).toString();
+
+    const imageResponse = await fetch(imageUrl);
+
+    if (!imageResponse.ok) return "";
+
+    const imageData = await imageResponse.json();
+
+    const pages = Object.values(
+      imageData.query?.pages || {}
+    );
+
+    const page = pages[0];
+
+    return (
+      page?.original?.source ||
+      page?.thumbnail?.source ||
+      ""
+    );
+  } catch (error) {
+    console.log("Wikipedia actor photo error:", name, error);
+    return "";
+  }
+}
+
+// Wikimedia Commons par actor ki photo search
+async function fetchCommonsActorPhoto(actorName) {
+  const name = actorName.trim();
+
+  if (!name) return "";
+
+  try {
+    const searchTerms = [
+      `${name} actor portrait`,
+      `${name} actor`,
+    ];
+
+    for (const searchTerm of searchTerms) {
+      const searchUrl =
+        "https://commons.wikimedia.org/w/api.php?" +
+        new URLSearchParams({
+          action: "query",
+          generator: "search",
+          gsrsearch: searchTerm,
+          gsrnamespace: "6",
+          gsrlimit: "8",
+          prop: "imageinfo",
+          iiprop: "url",
+          iiurlwidth: "600",
+          format: "json",
+          origin: "*",
+        }).toString();
+
+      const response = await fetch(searchUrl);
+
+      if (!response.ok) continue;
+
+      const data = await response.json();
+
+      const pages = Object.values(
+        data.query?.pages || {}
+      );
+
+      if (!pages.length) continue;
+
+      const normalizedActor = normalizeName(name);
+
+      // Actor name se match karti file ko priority
+      const matchingPage = pages.find((page) => {
+        const fileName = normalizeName(page.title);
+
+        return fileName.includes(normalizedActor);
+      });
+
+      const selectedPage = matchingPage || pages[0];
+
+      const imageInfo = selectedPage.imageinfo?.[0];
+
+      const photo =
+        imageInfo?.thumburl ||
+        imageInfo?.url ||
+        "";
+
+      if (photo) return photo;
+    }
+
+    return "";
+  } catch (error) {
+    console.log("Commons actor photo error:", name, error);
+    return "";
+  }
+}
+
+// Wikipedia aur Commons dono par photo search
+async function fetchActorPhoto(actorName) {
+  const name = actorName.trim();
+
+  if (!name) return "";
+
+  const cacheKey = normalizeName(name);
+
+  if (actorPhotoCache.has(cacheKey)) {
+    return actorPhotoCache.get(cacheKey);
+  }
+
+  try {
+    // First priority: Wikipedia actor article
+    let photo = await fetchWikipediaActorPhoto(name);
+
+    // Second priority: Wikimedia Commons
+    if (!photo) {
+      photo = await fetchCommonsActorPhoto(name);
+    }
+
+    actorPhotoCache.set(cacheKey, photo || "");
+
+    return photo || "";
+  } catch (error) {
+    console.log("Actor photo loading failed:", name, error);
+
+    actorPhotoCache.set(cacheKey, "");
+
+    return "";
+  }
+}
+
+// Cast data ko ek format mein convert karna
+function formatCastData(castData) {
+  if (typeof castData === "string") {
+    castData = castData
+      .split(";")
+      .map((entry) => {
+        const parts = entry.split("|");
+
+        return {
+          name: parts[0]?.trim() || "",
+          character: parts.slice(1).join("|").trim() || "Role TBA",
+        };
+      });
+  }
+
+  if (!Array.isArray(castData)) {
+    return [];
+  }
+
+  return castData
+    .map((actor) => {
+      if (typeof actor === "string") {
+        return {
+          name: actor.trim(),
+          character: "Actor",
+          image: "",
+        };
+      }
+
+      return {
+        name:
+          actor.name ||
+          actor.actor ||
+          actor.title ||
+          "",
+
+        character:
+          actor.character ||
+          actor.role ||
+          actor.characterName ||
+          "Role TBA",
+
+        image:
+          actor.image ||
+          actor.photo ||
+          actor.profileImage ||
+          actor.profile ||
+          "",
+      };
+    })
+    .filter((actor) => actor.name);
+}
+
+// Photo requests ko limited rakhta hai
+async function loadActorPhotos(actorList, isCancelled) {
+  const results = [...actorList];
+
+  let currentIndex = 0;
+
+  async function worker() {
+    while (currentIndex < results.length) {
+      if (isCancelled()) return;
+
+      const index = currentIndex;
+      currentIndex += 1;
+
+      const actor = results[index];
+
+      if (!actor.image) {
+        const photo = await fetchActorPhoto(actor.name);
+
+        if (isCancelled()) return;
+
+        results[index] = {
+          ...actor,
+          image: photo,
+        };
+      }
+    }
+  }
+
+  // Ek samay par maximum 3 actor photos search hongi
+  const workers = Array.from(
+    { length: Math.min(3, results.length) },
+    () => worker()
+  );
+
+  await Promise.all(workers);
+
+  return results;
+}
+
+export default function Details({
+  item,
+  onBack,
+  onBookNow,
+}) {
   const [image, setImage] = useState(
     item?.poster || item?.image || item?.thumbnail || ""
   );
@@ -18,9 +308,9 @@ export default function Details({ item, onBack, onBookNow }) {
   const [loading, setLoading] = useState(true);
   const [showMore, setShowMore] = useState(false);
   const [actors, setActors] = useState([]);
-  const [castLoading, setCastLoading] = useState(false);
+  const [actorsLoading, setActorsLoading] = useState(false);
 
-  // MOVIE DETAILS LOADING
+  // LOAD MOVIE DETAILS
   useEffect(() => {
     let cancelled = false;
 
@@ -30,10 +320,14 @@ export default function Details({ item, onBack, onBookNow }) {
         return;
       }
 
-      setImage(item.poster || item.image || item.thumbnail || "");
+      setImage(
+        item.poster || item.image || item.thumbnail || ""
+      );
+
       setDescription(
         item.description || "Discover the story behind this title."
       );
+
       setLoading(true);
 
       const wikiTitle = item.wiki || item.title;
@@ -87,106 +381,54 @@ export default function Details({ item, onBack, onBookNow }) {
     };
   }, [item]);
 
-  // ACTORS AND THEIR PHOTOS
+  // LOAD CAST AND ACTOR PHOTOS
   useEffect(() => {
     let cancelled = false;
 
     async function loadActors() {
       if (!item) {
         setActors([]);
+        setActorsLoading(false);
         return;
       }
 
-      let castData =
+      setActors([]);
+      setActorsLoading(true);
+
+      const castData =
         item.castDetails ||
         item.cast ||
         item.actors ||
         item.starring ||
         [];
 
-      if (typeof castData === "string") {
-        castData = castData.split(",").map((name) => ({
-          name: name.trim(),
-        }));
-      }
+      const formattedActors = formatCastData(castData);
 
-      if (!Array.isArray(castData)) {
-        castData = [];
-      }
+      if (cancelled) return;
 
-      if (castData.length === 0) {
-        setActors([]);
+      // Names aur character names pehle hi show honge
+      setActors(formattedActors);
+
+      if (!formattedActors.length) {
+        setActorsLoading(false);
         return;
       }
 
-      setCastLoading(true);
+      try {
+        const actorsWithPhotos = await loadActorPhotos(
+          formattedActors,
+          () => cancelled
+        );
 
-      const formattedActors = castData.map((actor) => {
-        if (typeof actor === "string") {
-          return {
-            name: actor,
-            character: "Actor",
-            image: "",
-          };
+        if (!cancelled) {
+          setActors(actorsWithPhotos);
         }
-
-        return {
-          name:
-            actor.name ||
-            actor.actor ||
-            actor.title ||
-            "Actor",
-
-          character:
-            actor.character ||
-            actor.role ||
-            actor.characterName ||
-            "Actor",
-
-          image:
-            actor.image ||
-            actor.photo ||
-            actor.profileImage ||
-            actor.profile ||
-            "",
-        };
-      });
-
-      const actorsWithPhotos = await Promise.all(
-        formattedActors.map(async (actor) => {
-          if (actor.image) {
-            return actor;
-          }
-
-          try {
-            const response = await fetch(
-              `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
-                actor.name.replace(/ /g, "_")
-              )}`
-            );
-
-            if (!response.ok) {
-              return actor;
-            }
-
-            const data = await response.json();
-
-            return {
-              ...actor,
-              image:
-                data.originalimage?.source ||
-                data.thumbnail?.source ||
-                "",
-            };
-          } catch (error) {
-            return actor;
-          }
-        })
-      );
-
-      if (!cancelled) {
-        setActors(actorsWithPhotos);
-        setCastLoading(false);
+      } catch (error) {
+        console.log("Actor loading error:", error);
+      } finally {
+        if (!cancelled) {
+          setActorsLoading(false);
+        }
       }
     }
 
@@ -208,7 +450,7 @@ export default function Details({ item, onBack, onBookNow }) {
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
-          gap: "20px",
+          gap: 20,
         }}
       >
         Movie details not found.
@@ -220,7 +462,7 @@ export default function Details({ item, onBack, onBookNow }) {
             color: BACKGROUND,
             border: "none",
             padding: "10px 20px",
-            borderRadius: "7px",
+            borderRadius: 7,
             cursor: "pointer",
           }}
         >
@@ -234,9 +476,9 @@ export default function Details({ item, onBack, onBookNow }) {
 
   const buttonStyle = {
     padding: "13px 25px",
-    borderRadius: "7px",
+    borderRadius: 7,
     border: "none",
-    fontSize: "15px",
+    fontSize: 15,
     fontWeight: "bold",
     cursor: "pointer",
   };
@@ -253,7 +495,7 @@ export default function Details({ item, onBack, onBookNow }) {
       {/* TOP NAVIGATION */}
       <nav
         style={{
-          height: "70px",
+          height: 70,
           padding: "0 5%",
           display: "flex",
           alignItems: "center",
@@ -266,7 +508,7 @@ export default function Details({ item, onBack, onBookNow }) {
         <h2
           style={{
             color: GOLD,
-            letterSpacing: "4px",
+            letterSpacing: 4,
             margin: 0,
           }}
         >
@@ -280,7 +522,7 @@ export default function Details({ item, onBack, onBookNow }) {
             border: `1px solid ${GOLD}`,
             color: GOLD,
             padding: "10px 18px",
-            borderRadius: "7px",
+            borderRadius: 7,
             cursor: "pointer",
           }}
         >
@@ -291,31 +533,25 @@ export default function Details({ item, onBack, onBookNow }) {
       {/* MOVIE HERO SECTION */}
       <section
         style={{
-          minHeight: "570px",
+          minHeight: 570,
           position: "relative",
           display: "flex",
           alignItems: "center",
           padding: "55px 7%",
           backgroundImage: image
             ? `linear-gradient(90deg, rgba(10,15,28,0.98) 0%, rgba(10,15,28,0.85) 43%, rgba(10,15,28,0.25) 100%), linear-gradient(0deg, ${BACKGROUND}, transparent 45%), url("${image}")`
-            : `linear-gradient(135deg, #10182B, #263653)`,
+            : "linear-gradient(135deg, #10182B, #263653)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div
-          style={{
-            maxWidth: "620px",
-            position: "relative",
-            zIndex: 2,
-          }}
-        >
+        <div style={{ maxWidth: 620, position: "relative", zIndex: 2 }}>
           <p
             style={{
               color: GOLD,
-              letterSpacing: "3px",
-              fontSize: "13px",
+              letterSpacing: 3,
+              fontSize: 13,
               fontWeight: "bold",
             }}
           >
@@ -328,6 +564,7 @@ export default function Details({ item, onBack, onBookNow }) {
               lineHeight: 1.1,
               margin: "15px 0",
               textTransform: "uppercase",
+              color: GOLD,
               textShadow: "0 3px 15px rgba(0,0,0,0.6)",
             }}
           >
@@ -337,9 +574,9 @@ export default function Details({ item, onBack, onBookNow }) {
           <p
             style={{
               color: MUTED,
-              fontSize: "15px",
+              fontSize: 15,
               lineHeight: 1.8,
-              maxWidth: "560px",
+              maxWidth: 560,
             }}
           >
             {loading
@@ -348,17 +585,15 @@ export default function Details({ item, onBack, onBookNow }) {
           </p>
 
           {item.year && (
-            <p style={{ color: GOLD }}>
-              {item.year}
-            </p>
+            <p style={{ color: GOLD }}>{item.year}</p>
           )}
 
           <div
             style={{
               display: "flex",
-              gap: "13px",
+              gap: 13,
               flexWrap: "wrap",
-              marginTop: "25px",
+              marginTop: 25,
             }}
           >
             <button
@@ -409,28 +644,22 @@ export default function Details({ item, onBack, onBookNow }) {
             background: "#172238",
           }}
         >
-          <h2 style={{ color: GOLD }}>
-            About {item.title}
-          </h2>
+          <h2 style={{ color: GOLD }}>About {item.title}</h2>
 
           <p
             style={{
               color: MUTED,
               lineHeight: 1.8,
-              maxWidth: "850px",
+              maxWidth: 850,
             }}
           >
             {description}
           </p>
 
-          <p style={{ color: TEXT }}>
-            Category: {category}
-          </p>
+          <p style={{ color: TEXT }}>Category: {category}</p>
 
           {item.year && (
-            <p style={{ color: TEXT }}>
-              Year: {item.year}
-            </p>
+            <p style={{ color: TEXT }}>Year: {item.year}</p>
           )}
         </section>
       )}
@@ -442,15 +671,13 @@ export default function Details({ item, onBack, onBookNow }) {
           background: BACKGROUND,
         }}
       >
-        <h2 style={{ color: GOLD }}>
-          About This Title
-        </h2>
+        <h2 style={{ color: GOLD }}>About This Title</h2>
 
         <p
           style={{
             color: MUTED,
             lineHeight: 1.8,
-            maxWidth: "850px",
+            maxWidth: 850,
           }}
         >
           {description}
@@ -470,102 +697,125 @@ export default function Details({ item, onBack, onBookNow }) {
             alignItems: "center",
             justifyContent: "space-between",
             flexWrap: "wrap",
-            gap: "10px",
-            marginBottom: "30px",
+            gap: 10,
+            marginBottom: 30,
           }}
         >
           <h2
             style={{
               color: GOLD,
               margin: 0,
-              fontSize: "28px",
+              fontSize: 28,
               borderLeft: `4px solid ${GOLD}`,
-              paddingLeft: "14px",
+              paddingLeft: 14,
             }}
           >
             Cast & Actors
           </h2>
 
-          <span
-            style={{
-              color: MUTED,
-              fontSize: "13px",
-            }}
-          >
+          <span style={{ color: MUTED, fontSize: 13 }}>
             {actors.length} Cast Members
           </span>
         </div>
 
-        {castLoading ? (
-          <p style={{ color: MUTED }}>
-            Loading actors and their photos...
-          </p>
-        ) : actors.length > 0 ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fill, minmax(155px, 1fr))",
-              gap: "22px",
-            }}
-          >
-            {actors.map((actor, index) => (
-              <div
-                key={index}
-                style={{
-                  background: "#1A2942",
-                  border: "1px solid rgba(232,200,121,0.25)",
-                  borderRadius: "12px",
-                  overflow: "hidden",
-                  textAlign: "center",
-                  transition: "0.3s",
-                }}
-              >
-                {actor.image ? (
-                  <img
-                    src={actor.image}
-                    alt={actor.name}
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                      e.currentTarget.nextSibling.style.display = "flex";
-                    }}
-                    style={{
-                      width: "100%",
-                      height: "210px",
-                      objectFit: "cover",
-                      display: "block",
-                    }}
-                  />
-                ) : null}
-
+        {actors.length > 0 ? (
+          <>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fill, minmax(150px, 1fr))",
+                gap: 25,
+              }}
+            >
+              {actors.map((actor, index) => (
                 <div
+                  key={`${actor.name}-${index}`}
                   style={{
-                    width: "100%",
-                    height: "210px",
-                    display: actor.image ? "none" : "flex",
+                    background: "#1A2942",
+                    border: "1px solid rgba(232,200,121,0.25)",
+                    borderRadius: 14,
+                    padding: "22px 12px 18px",
+                    textAlign: "center",
+                    transition: "0.3s",
+                    display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "center",
-                    background:
-                      "linear-gradient(135deg, #263653, #10182B)",
-                    color: GOLD,
-                    fontSize: "42px",
-                    fontWeight: "bold",
                   }}
                 >
-                  {actor.name
-                    .split(" ")
-                    .map((word) => word[0])
-                    .join("")
-                    .slice(0, 2)
-                    .toUpperCase()}
-                </div>
+                  {/* CIRCULAR ACTOR PHOTO */}
+                  <div
+                    style={{
+                      width: 112,
+                      height: 112,
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      border: `3px solid ${GOLD}`,
+                      boxShadow: "0 0 18px rgba(232,200,121,0.2)",
+                      marginBottom: 15,
+                      background:
+                        "linear-gradient(135deg, #263653, #10182B)",
+                      flexShrink: 0,
+                      position: "relative",
+                    }}
+                  >
+                    {actor.image && (
+                      <img
+                        src={actor.image}
+                        alt={`${actor.name} profile`}
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
 
-                <div style={{ padding: "14px 8px 18px" }}>
+                          const fallback =
+                            e.currentTarget.parentElement?.querySelector(
+                              ".actor-fallback"
+                            );
+
+                          if (fallback) {
+                            fallback.style.display = "flex";
+                          }
+                        }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          objectPosition: "center top",
+                          display: "block",
+                        }}
+                      />
+                    )}
+
+                    <div
+                      className="actor-fallback"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        display: actor.image ? "none" : "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: GOLD,
+                        fontSize: 34,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {actor.name
+                        .split(" ")
+                        .filter(Boolean)
+                        .map((word) => word[0])
+                        .join("")
+                        .slice(0, 2)
+                        .toUpperCase()}
+                    </div>
+                  </div>
+
                   <h3
                     style={{
                       color: TEXT,
-                      fontSize: "15px",
+                      fontSize: 15,
                       margin: "0 0 7px",
+                      lineHeight: 1.4,
                     }}
                   >
                     {actor.name}
@@ -574,30 +824,42 @@ export default function Details({ item, onBack, onBookNow }) {
                   <p
                     style={{
                       color: GOLD,
-                      fontSize: "12px",
+                      fontSize: 12,
                       margin: 0,
+                      lineHeight: 1.5,
                     }}
                   >
                     {actor.character}
                   </p>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+
+            {actorsLoading && (
+              <p
+                style={{
+                  color: MUTED,
+                  textAlign: "center",
+                  marginTop: 25,
+                  fontSize: 13,
+                }}
+              >
+                Loading actor profile photos...
+              </p>
+            )}
+          </>
         ) : (
           <div
             style={{
               background: "#1A2942",
               border: "1px solid rgba(232,200,121,0.2)",
-              borderRadius: "10px",
-              padding: "25px",
+              borderRadius: 10,
+              padding: 25,
               color: MUTED,
               lineHeight: 1.8,
             }}
           >
             Cast information is not available for this title yet.
-            Add actor names to the movie data to display their
-            photos and character names here.
           </div>
         )}
       </section>
@@ -605,18 +867,13 @@ export default function Details({ item, onBack, onBookNow }) {
       {/* FOOTER */}
       <footer
         style={{
-          padding: "25px",
+          padding: 25,
           textAlign: "center",
           color: MUTED,
           borderTop: "1px solid rgba(232,200,121,0.2)",
         }}
       >
-        <h2
-          style={{
-            color: GOLD,
-            letterSpacing: "4px",
-          }}
-        >
+        <h2 style={{ color: GOLD, letterSpacing: 4 }}>
           AUREVIX
         </h2>
 

@@ -91,20 +91,19 @@ function Seat({ selectedBooking, onBack, onContinue }) {
     >
       <div style={{ maxWidth: "950px", margin: "auto" }}>
 
-        <button
-          onClick={onBack}
-          style={{
-            background: "transparent",
-            color: GOLD,
-            border: `1px solid ${GOLD}`,
-            padding: "10px 20px",
-            borderRadius: "8px",
-            cursor: "pointer",
-            marginBottom: "25px"
-          }}
-        >
-          ← Back
-        </button>
+        {/* AUREVIX LOGO AND BACK BUTTON */}
+        <div style={styles.topBar}>
+          <h2 style={styles.logo}>
+            AUREVIX
+          </h2>
+
+          <button
+            onClick={onBack}
+            style={styles.backButton}
+          >
+            ← Back
+          </button>
+        </div>
 
         <h1
           style={{
@@ -347,5 +346,35 @@ function Seat({ selectedBooking, onBack, onContinue }) {
     </div>
   );
 }
+
+const styles = {
+  topBar: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 15,
+    paddingBottom: 18,
+    marginBottom: 25,
+    borderBottom: "1px solid rgba(232,200,121,0.2)"
+  },
+
+  logo: {
+    color: GOLD,
+    letterSpacing: 4,
+    fontSize: 25,
+    fontWeight: 800,
+    margin: 0,
+    textShadow: "0 0 15px rgba(232,200,121,0.2)"
+  },
+
+  backButton: {
+    background: "transparent",
+    color: GOLD,
+    border: `1px solid ${GOLD}`,
+    padding: "10px 20px",
+    borderRadius: "8px",
+    cursor: "pointer"
+  }
+};
 
 export default Seat;

@@ -1,3 +1,4 @@
+
 import React from "react";
 
 const GOLD = "#E8C879";
@@ -48,20 +49,47 @@ function Ticket({ booking, bookingId, onBack, onHome }) {
       }}
     >
       <div style={{ maxWidth: "720px", margin: "auto" }}>
-        <button
-          onClick={onBack}
+
+        {/* AUREVIX LOGO AND BACK BUTTON */}
+
+        <div
           style={{
-            background: "transparent",
-            color: GOLD,
-            border: `1px solid ${GOLD}70`,
-            padding: "10px 18px",
-            borderRadius: "8px",
-            cursor: "pointer",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "15px",
+            paddingBottom: "18px",
             marginBottom: "25px",
+            borderBottom: "1px solid rgba(232,200,121,0.2)",
           }}
         >
-          ← Back to Confirmation
-        </button>
+          <h2
+            style={{
+              color: GOLD,
+              letterSpacing: "4px",
+              fontSize: "25px",
+              fontWeight: 800,
+              margin: 0,
+              textShadow: "0 0 15px rgba(232,200,121,0.2)",
+            }}
+          >
+            AUREVIX
+          </h2>
+
+          <button
+            onClick={onBack}
+            style={{
+              background: "transparent",
+              color: GOLD,
+              border: `1px solid ${GOLD}70`,
+              padding: "10px 18px",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            ← Back to Confirmation
+          </button>
+        </div>
 
         <div
           style={{
