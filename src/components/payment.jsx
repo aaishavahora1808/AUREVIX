@@ -39,6 +39,7 @@ function Payment({ booking, onBack, onPayment }) {
       return;
     }
 
+    // Open PinCode page instead of confirming ticket directly.
     if (onPayment) {
       onPayment({
         ...booking,
@@ -301,7 +302,8 @@ function Payment({ booking, onBack, onPayment }) {
               cursor: "pointer"
             }}
           >
-            Pay ₹{booking?.totalAmount || 0}
+            Continue to Verification
+            ₹{booking?.totalAmount || 0}
           </button>
 
           <p
