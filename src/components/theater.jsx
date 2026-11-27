@@ -1,4 +1,3 @@
-
 import React, { useMemo, useState } from "react";
 
 const GOLD = "#E8C879";
@@ -304,6 +303,7 @@ const styles = {
   cityHeading: {
     margin: "7px 0 0",
     fontSize: 25,
+    color: GOLD,
   },
 
   count: {
@@ -344,6 +344,7 @@ const styles = {
   theatreName: {
     margin: 0,
     fontSize: 18,
+    color: GOLD,
   },
 
   theatreCity: {
