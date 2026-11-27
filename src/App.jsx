@@ -7,6 +7,7 @@ import Theater from "./components/theater";
 import Show from "./components/show";
 import Seat from "./components/seat";
 import Payment from "./components/payment";
+import PinCode from "./components/PinCode";
 import Confirmation from "./components/confirmation";
 import Ticket from "./components/ticket";
 import Profile from "./components/profile";
@@ -16,6 +17,9 @@ function App() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedTheatre, setSelectedTheatre] = useState(null);
   const [selectedShow, setSelectedShow] = useState(null);
+
+  const [pendingPayment, setPendingPayment] = useState(null);
+
   const [confirmedBooking, setConfirmedBooking] = useState(null);
   const [bookingId, setBookingId] = useState("");
 
@@ -26,6 +30,7 @@ function App() {
     setSelectedItem(item);
     setSelectedTheatre(null);
     setSelectedShow(null);
+    setPendingPayment(null);
     setConfirmedBooking(null);
     setBookingId("");
     setCurrentPage("details");
@@ -36,6 +41,7 @@ function App() {
     setSelectedItem(item || selectedItem);
     setSelectedTheatre(null);
     setSelectedShow(null);
+    setPendingPayment(null);
     setCurrentPage("theater");
   };
 
@@ -57,27 +63,35 @@ function App() {
     setCurrentPage("payment");
   };
 
-  // Payment
+  // Payment: Open PinCode Page
   const handlePayment = (paymentDetails) => {
+    setPendingPayment(paymentDetails);
+    setCurrentPage("pincode");
+  };
+
+  // Successful Demo Verification
+  const handlePaymentSuccess = (verifiedDetails) => {
     const newBookingId = `AUR${Date.now().toString().slice(-8)}`;
 
     const newBooking = {
-      ...paymentDetails,
-      paymentStatus: "Demo",
+      ...pendingPayment,
+      ...verifiedDetails,
+      paymentStatus: "Demo Payment Successful",
+      paymentVerified: true,
     };
 
     setConfirmedBooking(newBooking);
     setBookingId(newBookingId);
 
     const movieName =
-      paymentDetails?.movie?.title ||
-      paymentDetails?.movie?.name ||
-      paymentDetails?.movie ||
+      newBooking?.movie?.title ||
+      newBooking?.movie?.name ||
+      newBooking?.movie ||
       "Selected Movie";
 
     const theatreName =
-      paymentDetails?.theatre?.name ||
-      paymentDetails?.theatre ||
+      newBooking?.theatre?.name ||
+      newBooking?.theatre ||
       "Selected Theatre";
 
     const savedBooking = {
@@ -99,6 +113,7 @@ function App() {
       console.error("Could not save booking:", error);
     }
 
+    setPendingPayment(null);
     setCurrentPage("confirmation");
   };
 
@@ -107,6 +122,7 @@ function App() {
     setSelectedItem(null);
     setSelectedTheatre(null);
     setSelectedShow(null);
+    setPendingPayment(null);
     setConfirmedBooking(null);
     setBookingId("");
     setCurrentPage("home");
@@ -213,6 +229,15 @@ function App() {
           booking={selectedShow}
           onBack={() => setCurrentPage("seat")}
           onPayment={handlePayment}
+        />
+      )}
+
+      {/* PIN CODE / DEMO VERIFICATION PAGE */}
+      {currentPage === "pincode" && (
+        <PinCode
+          booking={pendingPayment}
+          onBack={() => setCurrentPage("payment")}
+          onPaymentSuccess={handlePaymentSuccess}
         />
       )}
 
