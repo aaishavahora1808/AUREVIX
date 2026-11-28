@@ -405,6 +405,11 @@ function PosterCard({ item, onSelect, compact = false }) {
         transition: "0.3s",
         boxShadow: "0 12px 30px rgba(0,0,0,0.22)",
         cursor: "pointer",
+
+        // UPDATED: सभी कार्ड की ऊँचाई बराबर
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-7px)";
@@ -421,6 +426,7 @@ function PosterCard({ item, onSelect, compact = false }) {
         style={{
           height: compact ? 185 : 250,
           width: "100%",
+          flexShrink: 0,
           background: BLACK,
           position: "relative",
           overflow: "hidden",
@@ -481,19 +487,42 @@ function PosterCard({ item, onSelect, compact = false }) {
         </span>
       </div>
 
-      <div style={{ padding: compact ? 10 : 14 }}>
+      <div
+        style={{
+          padding: compact ? 10 : 14,
+
+          // UPDATED: बटन को कार्ड के नीचे रखने के लिए
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+        }}
+      >
         <h3
           style={{
             color: TEXT,
             margin: "0 0 7px",
             fontSize: compact ? 13 : 16,
-            minHeight: compact ? 32 : "auto",
+
+            // UPDATED: सभी मूवी टाइटल के लिए समान जगह
+            minHeight: compact ? 38 : 48,
+            lineHeight: 1.4,
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
           }}
         >
           {item.title}
         </h3>
 
-        <p style={{ color: MUTED, margin: "0 0 12px", fontSize: 11 }}>
+        <p
+          style={{
+            color: MUTED,
+            margin: "0 0 12px",
+            fontSize: 11,
+            minHeight: 16,
+          }}
+        >
           {item.year ? `${item.year} • ` : ""}
           {item.type}
         </p>
@@ -506,6 +535,11 @@ function PosterCard({ item, onSelect, compact = false }) {
           style={{
             width: "100%",
             padding: 11,
+            marginTop: "auto",
+
+            // UPDATED: सभी बटन एक ही लाइन में
+            flexShrink: 0,
+
             background: `linear-gradient(110deg,#F4E4B6,${GOLD})`,
             border: "none",
             borderRadius: 8,
@@ -713,6 +747,7 @@ export default function Home({ onSelectItem }) {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill,minmax(165px,1fr))",
     gap: 20,
+    alignItems: "stretch",
   };
 
   const selectItem = (item) => {
@@ -757,10 +792,17 @@ export default function Home({ onSelectItem }) {
           gap: 14,
           overflowX: "auto",
           paddingBottom: 12,
+          alignItems: "stretch",
         }}
       >
         {items.slice(0, 5).map((item) => (
-          <div key={item.title} style={{ minWidth: 125 }}>
+          <div
+            key={item.title}
+            style={{
+              minWidth: 125,
+              height: "100%",
+            }}
+          >
             <PosterCard
               compact
               item={item}
@@ -846,11 +888,13 @@ export default function Home({ onSelectItem }) {
   const allRomanticMovies = [
     ...romanticMovies,
     movies.find((item) => item.title === "Titanic"),
-  ].filter(Boolean).map((item) => ({
-    ...item,
-    type: "Movie",
-    genre: "Romance",
-  }));
+  ]
+    .filter(Boolean)
+    .map((item) => ({
+      ...item,
+      type: "Movie",
+      genre: "Romance",
+    }));
 
   const filteredRomanticMovies = allRomanticMovies.filter((item) => {
     const matchesSearch = item.title
@@ -1301,12 +1345,6 @@ export default function Home({ onSelectItem }) {
                   {homeSearchResults.length} Movies Found
                 </span>
               </div>
-
-              {/* NOTE:
-                  Home Page पर Romantic के नीचे Bollywood/Hollywood
-                  के extra filter buttons नहीं दिखाए जाते।
-                  ये filters केवल Romantic Movies page पर हैं।
-              */}
 
               {renderGrid(homeSearchResults)}
             </div>
